@@ -496,7 +496,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     </div>
 
     <div class="panel" id="done" tabindex="-1">
-      <img class="done-logo" id="doneLogo" src="images/logo-dynamic-white.svg" alt="" onerror="this.remove()">
+      <img class="done-logo" id="doneLogo" src="logo-dynamic-white.svg" alt="" onerror="this.remove()">
       <span class="status" id="dStatus">Waiting for payment</span>
       <h2 style="margin:10px 0 4px">Thank you, <span id="dName"></span>!</h2>
       <p class="sub" id="dSub" style="margin-bottom:10px"></p>
@@ -595,15 +595,15 @@ const CONFIG = {
 
   // Header logos. Put the files in the "images" folder. PNG, SVG or WebP, transparent background, at least 200 px tall
   // (shown about 46 px high). The event logo (BM Color Fun Run 2026) is already set; the school logo is still empty:
-  // add e.g. "images/logo-school.png". An empty logo shows a dashed placeholder while you preview the site and nothing once
+  // add e.g. "logo-school.png". An empty logo shows a dashed placeholder while you preview the site and nothing once
   // API_URL is set. While the event logo is set, the written event name is hidden in the header.
-  logos: { school: "", schoolAlt: "School logo", event: "images/logo-stacked-white.svg", eventAlt: "BM Color Fun Run 2026" },
+  logos: { school: "", schoolAlt: "School logo", event: "logo-stacked-white.svg", eventAlt: "BM Color Fun Run 2026" },
 
   // Hero (top banner) colour. theme = "purple" | "lime" | "coral" | "cyan" | "white". The matching logo version
-  // (images/logo-stacked-<theme>.svg) is picked automatically, so change just one word to try another colour.
-  hero: { theme: "purple", logo: "images/logo-stacked-{theme}.svg" },
+  // (logo-stacked-<theme>.svg) is picked automatically, so change just one word to try another colour.
+  hero: { theme: "purple", logo: "logo-stacked-{theme}.svg" },
 
-  // Footer: sponsor logos. Example: { name:"Sponsor A", logo:"images/sponsor-a.png", url:"https://example.com" }
+  // Footer: sponsor logos. Example: { name:"Sponsor A", logo:"sponsor-a.png", url:"https://example.com" }
   // Landscape logos work best (about 400 x 200 px, under 100 KB). "url" is optional. Empty list = section hidden.
   sponsors: [],
 
@@ -612,7 +612,7 @@ const CONFIG = {
   contacts: [],
 
   // Footer: social media buttons. Only entries with a url are shown. For "Email" you can just type the address.
-  // icon is optional: put an official icon image (PNG / SVG) in the images folder, e.g. "images/icon-instagram.svg".
+  // icon is optional: put an official icon image (PNG / SVG) in the images folder, e.g. "icon-instagram.svg".
   // Without it the button shows a round initial instead.
   social: [
     { name: "Instagram", url: "", icon: "" },
@@ -624,7 +624,7 @@ const CONFIG = {
   ],
 
   // Header photo carousel: last year's event photos. Put the files in an "images" folder next to
-  // index.html and list them here, e.g. ["images/2025-01.jpg", "images/2025-02.jpg", "images/2025-03.jpg"].
+  // index.html and list them here, e.g. ["2025-01.jpg", "2025-02.jpg", "2025-03.jpg"].
   // Landscape photos, about 1600 px wide, under ~400 KB each. Empty list = colorful placeholder.
   heroImages: [],
 
@@ -648,7 +648,7 @@ const CONFIG = {
     { time:"08:30", title:"Event ends", tbc:true }
   ],
 
-  // Route section. Put your route map in the images folder and set image: "images/route.png".
+  // Route section. Put your route map in the images folder and set image: "route.png".
   // Without an image, a template map is shown with a "Template" tag.
   route: {
     image: "",
@@ -673,9 +673,9 @@ const CONFIG = {
     // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each).
     // Only files that actually exist are shown, so you can add or remove slides at any time. "label" is the small caption.
     "Color Fun Run T-Shirt": { icon: "👕", desc: "Official event tee. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
-      images: [ { src:"images/tshirt-design.jpg", label:"Design" }, { src:"images/tshirt-size.jpg", label:"Size chart" } ] },
+      images: [ { src:"tshirt-design.jpg", label:"Design" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 9 letters).",
-      images: [ { src:"images/clicker-1.jpg", label:"Hexa" }, { src:"images/clicker-2.jpg", label:"Square" } ] }
+      images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" } ] }
   },
   // Personalised clicker. Prices come from the Sheet (Products tab, SKUs below): CK-S = up to 5 letters, CK-L = 6 to 9 letters.
   clicker: {
