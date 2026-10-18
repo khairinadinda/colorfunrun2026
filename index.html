@@ -301,6 +301,18 @@ input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px
 .pfprev small{display:block;color:var(--muted)}
 .okbox{background:var(--lime);border:2px solid var(--ink);color:var(--ink);padding:10px 12px;border-radius:8px;margin:0 0 14px;font-weight:800}
 
+/* collapsible event details */
+details.acc{padding:0;margin-bottom:14px;background:#fff}
+details.acc[open]{background:#fff}
+details.acc>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;min-height:56px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::after{content:"+";flex:none;width:34px;height:34px;border:3px solid var(--ink);border-radius:8px;background:var(--lime);display:grid;place-items:center;font-weight:900;font-size:1.3rem;line-height:1}
+details.acc[open]>summary::after{content:"\2212"}
+.acc-t{font-family:var(--head, inherit);font-weight:900;font-size:1.15rem;display:flex;flex-direction:column;gap:2px}
+.acc-t small{font-size:.85rem;font-weight:600;color:var(--muted)}
+.acc-t small:empty{display:none}
+.acc-b{padding:4px 18px 18px;border-top:2px dashed var(--ink)}
+.acc-b h3{margin-top:14px}
 /* faq + footer */
 details{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin-bottom:12px}
 details[open]{box-shadow:4px 4px 0 var(--ink);background:var(--lime-soft)}
@@ -591,21 +603,20 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
 <section id="info" class="band">
   <div class="wrap">
     <h2>Event details</h2>
-    <div class="two-col">
-      <div><h3>Race-day schedule</h3><ol class="timeline" id="timeline"></ol></div>
-      <div><h3>Key dates</h3><ol class="timeline" id="keyDates"></ol></div>
-    </div>
-  </div>
-</section>
-
-<section id="route" class="band lime">
-  <div class="wrap">
-    <h2>The route</h2>
-    <p class="sub" id="routeSub"></p>
-    <div class="route-grid">
-      <figure class="routefig" id="routeFig"></figure>
-      <div id="routeDetails"></div>
-    </div>
+    <details class="acc" id="schedule">
+      <summary><span class="acc-t">Schedule &amp; key dates<small>Race-day timeline, registration and payment deadlines</small></span></summary>
+      <div class="acc-b two-col">
+        <div><h3>Race-day schedule</h3><ol class="timeline" id="timeline"></ol></div>
+        <div><h3>Key dates</h3><ol class="timeline" id="keyDates"></ol></div>
+      </div>
+    </details>
+    <details class="acc" id="route">
+      <summary><span class="acc-t">The route<small id="routeSub"></small></span></summary>
+      <div class="acc-b route-grid">
+        <figure class="routefig" id="routeFig"></figure>
+        <div id="routeDetails"></div>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -1764,6 +1775,11 @@ $("#pf_code").addEventListener("input", () => $('.field[data-f="pf_code"]').clas
 $("#pf_phone").addEventListener("input", () => $('.field[data-f="pf_phone"]').classList.remove("err"));
 
 fillContactRoles(); renderStatic(); initHero(); initCarousel(); renderFacts(); renderPeople(); renderCart(); probeImages(); loadProducts().then(openFromHash);
+
+/* event details: collapsed by default; opening via menu link or #hash */
+function openAcc(id){ const el = document.getElementById(id); if (el && el.tagName === "DETAILS"){ el.open = true; } }
+document.querySelectorAll('a[href="#route"], a[href="#info"]').forEach(a => a.addEventListener("click", () => { openAcc(a.getAttribute("href") === "#route" ? "route" : "schedule"); }));
+if (location.hash === "#route") openAcc("route"); if (location.hash === "#info" || location.hash === "#schedule") openAcc("schedule");
 </script>
 </body>
 </html>
