@@ -232,6 +232,20 @@ input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px
 .addbtn[disabled]{background:#ddd;box-shadow:none;cursor:not-allowed;color:#666}
 .sizehelp{font-size:.82rem;color:var(--muted);font-weight:600}
 
+/* check status */
+#status>.wrap>h2,#status>.wrap>.sub{color:#fff}
+.stres{margin-top:20px;border-top:var(--bw) dashed var(--ink);padding-top:18px}
+.stpill{display:inline-block;border:var(--bw) solid var(--ink);border-radius:10px;padding:6px 16px;font-family:var(--num);font-weight:900;font-size:1.25rem;box-shadow:3px 3px 0 var(--ink)}
+.stpill.warn{background:#ffd93d}.stpill.info{background:var(--cyan)}.stpill.good{background:var(--lime)}.stpill.bad{background:#ffc9d2}
+.stres p{margin:10px 0 0;font-weight:700}
+.stres .stmeta{display:grid;gap:6px;margin:14px 0 0;font-weight:700}
+.stres .stmeta div{display:flex;justify-content:space-between;gap:12px;border-bottom:2px dashed var(--soft);padding-bottom:6px}
+.stres .stmeta span:last-child{font-family:var(--num);font-weight:800;text-align:right}
+.stres .lbl{margin-top:16px}
+.stres ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+.stres li{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+.stbank{margin-top:14px;background:var(--ink);color:#fff;border-radius:10px;padding:12px 14px}
+.stbank b{font-family:var(--num);font-weight:900;color:var(--lime)}
 /* cart */
 .cart table{width:100%;border-collapse:collapse}
 .cart td{padding:11px 4px;border-bottom:2px dashed var(--soft);vertical-align:middle}
@@ -333,6 +347,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
       <a class="hide-sm hide-md" href="#route">Route</a>
       <a class="hide-sm" href="#register" id="navReg">Register</a>
       <a class="navpill" href="#shop-only" id="navShop">Shop only</a>
+      <a class="hide-sm hide-md" href="#status" id="navStatus">Check status</a>
       <a class="hide-sm" href="#pay" id="navPay">Upload proof</a>
       <a class="hide-sm" href="#faq">FAQ</a>
       <button class="cartbtn" id="cartNav" type="button" aria-label="Go to cart">Cart <span id="cartCount">0</span></button>
@@ -448,6 +463,10 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
         <div class="rolebar" id="roleBar"></div>
         <div id="people"></div>
         <button type="button" class="addp" id="addPerson">+ Add participant</button>
+        <div class="field" id="helperConsent" data-f="f_helperok" hidden style="margin-top:14px">
+          <label class="check"><input type="checkbox" id="f_helperok"> <span>I authorise the helper(s) listed above to accompany my child at the event. Helpers do not receive a bib number or a medal.</span></label>
+          <div class="errmsg">Please tick this box to add a helper.</div>
+        </div>
       </div>
     </div>
 
@@ -519,6 +538,30 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
       <div id="doneProof"></div>
       <p class="sub" id="dTip" style="margin-top:14px"></p>
       <button class="btn ghost small" type="button" id="againBtn">Make another registration</button>
+    </div>
+  </div>
+</section>
+
+<section id="status" class="band purple">
+  <div class="wrap">
+    <h2>Check your status</h2>
+    <p class="sub">Already registered or ordered? Enter your code and the WhatsApp number you used, and see where things stand.</p>
+    <div class="panel" id="statusPanel">
+      <div class="grid2">
+        <div class="field" data-f="st_code">
+          <label for="st_code">Registration / order code</label>
+          <input id="st_code" placeholder="e.g. CFR-0012" autocapitalize="characters" autocomplete="off">
+          <div class="errmsg">Please enter your code, for example CFR-0012.</div>
+        </div>
+        <div class="field" data-f="st_phone">
+          <label for="st_phone">WhatsApp number you registered with</label>
+          <input id="st_phone" type="tel" inputmode="tel" placeholder="08xx xxxx xxxx" autocomplete="off">
+          <div class="errmsg">Please enter the phone number you registered with.</div>
+        </div>
+      </div>
+      <div class="formerr" id="stErr"></div>
+      <button class="btn primary" id="stBtn" type="button" style="width:100%">Check status</button>
+      <div id="stResult" class="stres" hidden></div>
     </div>
   </div>
 </section>
@@ -664,11 +707,13 @@ const CONFIG = {
     details: [["Distance", "2.5 km"], ["Start", "TBC"], ["Finish", "TBC"], ["Color zones", "TBC"], ["Water stations", "TBC"], ["Color Party", "TBC"]]
   },
 
-  // Per registration form. Students count as children; every other role counts as an adult.
+  // Per registration form: up to 2 adults (Parent / guardian, Teacher / staff) and 3 children (Student, or Other family member
+  // for a child who is not a student). The contact person, if running, always counts as an adult.
   // (The Sheet backend enforces the same limits, see MAX_ADULTS / MAX_STUDENTS in Code.gs.)
-  limits: { adults: 2, children: 3 },
-  roles: ["Student", "Parent / guardian", "Teacher / staff", "Other family member"],
-  childRoles: ["Student"],
+  limits: { adults: 2, children: 3, helpers: 2 },
+  roles: ["Student", "Parent / guardian", "Teacher / staff", "Other family member", "Helper (no bib)"],
+  helperRole: "Helper (no bib)",     // a helper who runs / walks with a child: on the list, but no bib and no medal (max limits.helpers)
+  childRoles: ["Student", "Other family member"],
 
   // Fallback only. The real bank details come from the Sheet's Settings tab (BANK_NAME / BANK_ACCOUNT / BANK_HOLDER),
   // so the website and the confirmation email can never disagree.
@@ -713,7 +758,7 @@ const CONFIG = {
 
   // Carried over from last year's rules, please confirm.
   faq: [
-    ["Who can join?", "Families of our students and teachers. One registration form covers up to 2 parents / adults and 3 children (5 people). Families with more people cannot register on one form, please contact the committee."],
+    ["Who can join?", "Families of our students and teachers. One registration form covers up to 2 parents / adults and 3 children (5 people). List each child as Student, or choose Other family member if the child is not a student. A helper who accompanies a child can be added with the role Helper (no bib), up to 2 per family. Helpers do not receive a bib number or a medal. Families with more people cannot register on one form, please contact the committee."],
     ["How many goodie bags do we get?", "One goodie bag per family. Only registered participants receive a finisher medal."],
     ["Can my child under 2 join?", "Children under 2 cannot be registered, but they are welcome to join with a companion."],
     ["How do I pay?", "After you submit, you will see the exact amount, our BRI bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
@@ -749,10 +794,13 @@ let phase = null;           // dates, open/closed flags, spots
 let mode = "reg";           // reg | merch | soon | closed   (what the dates allow)
 let flow = "reg";           // reg | shop: while registration is open, what the visitor chose to do
 
-const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;
+const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_HELPERS = CONFIG.limits.helpers, MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;   // MAX_PEOPLE = runners (bib + medal)
 const isChildRole = r => CONFIG.childRoles.indexOf(r) >= 0;
-const adultCount = () => people.filter(p => p.self || (p.role && !isChildRole(p.role))).length;
+const isHelper = r => r === CONFIG.helperRole;
+const roleLabel = r => isHelper(r) ? "Helper, no bib" : r;
+const adultCount = () => people.filter(p => !isHelper(p.role) && (p.self || (p.role && !isChildRole(p.role)))).length;
 const childCount = () => people.filter(p => !p.self && p.role && isChildRole(p.role)).length;
+const helperCount = () => people.filter(p => isHelper(p.role)).length;
 const canShop = () => !!phase && (mode === "reg" || mode === "merch") && !!phase.merchOpen;
 function shopOnly(){ return mode === "merch" || (mode === "reg" && flow === "shop" && canShop()); }   // merch without registration
 let lastOrder = null, lastBank = null;
@@ -906,7 +954,8 @@ function applyMode(){
   show($("#phaseNotice"), !open || merch);
   const nav = $("#navShop");
   nav.hidden = !canShop(); nav.textContent = reg ? "Shop only" : "Shop"; nav.setAttribute("href", reg ? "#shop-only" : "#shop");
-  show($("#pay"), mode !== "soon"); $("#navPay").hidden = mode === "soon";   // proof upload stays available after the windows close
+  show($("#pay"), mode !== "soon"); $("#navPay").hidden = mode === "soon";
+  show($("#status"), mode !== "soon"); $("#navStatus").hidden = mode === "soon";   // proof upload stays available after the windows close
   $("#cartNav").hidden = !open;
   $("#heroShop").hidden = !(reg && canShop());
   $("#heroCta").hidden = !open;
@@ -1003,16 +1052,16 @@ function renderStatic(){
 
 /* ---------- contact person + participants ---------- */
 function fillContactRoles(){
-  $("#f_role").innerHTML = '<option value="">Select…</option>' + CONFIG.roles.filter(r => !isChildRole(r)).map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
+  $("#f_role").innerHTML = '<option value="">Select…</option>' + CONFIG.roles.filter(r => r !== "Student").map(r => `<option value="${esc(r)}">${esc(r)}</option>`).join("");
 }
 
 function renderPeople(){
   const host = $("#people");
-  const adults = adultCount(), kids = childCount();
+  const adults = adultCount(), kids = childCount(), helpers = helperCount();
   host.innerHTML = people.map((p, i) => {
     const me = !!p.self;
     const opts = CONFIG.roles.map(r => {
-      const full = isChildRole(r) ? kids >= MAX_CHILDREN : adults >= MAX_ADULTS;
+      const full = isHelper(r) ? helpers >= MAX_HELPERS : isChildRole(r) ? kids >= MAX_CHILDREN : adults >= MAX_ADULTS;
       return `<option value="${esc(r)}" ${r===p.role?"selected":""} ${full && r !== p.role ? "disabled" : ""}>${esc(r)}${full && r !== p.role ? " (full)" : ""}</option>`;
     }).join("");
     return `
@@ -1023,15 +1072,18 @@ function renderPeople(){
         <div class="field" data-f="p${i}_role"><label for="p${i}_role">Role</label>
           <select id="p${i}_role" data-k="role" ${me ? "disabled" : ""}><option value="">Select…</option>${me ? CONFIG.roles.map(r => `<option value="${esc(r)}" ${r===p.role?"selected":""}>${esc(r)}</option>`).join("") : opts}</select><div class="errmsg">Please choose a role.</div></div>
         <div class="field" data-f="p${i}_klass" ${p.role==="Student"?"":"hidden"}><label for="p${i}_klass">Class</label><input id="p${i}_klass" data-k="klass" value="${esc(p.klass)}" placeholder="e.g. 3B"><div class="errmsg">Please enter the class.</div></div>
+        <div class="field" data-f="p${i}_phone" ${isHelper(p.role)?"":"hidden"}><label for="p${i}_phone">Helper phone <span class="opt">(optional)</span></label><input id="p${i}_phone" data-k="phone" type="tel" inputmode="tel" value="${esc(p.phone||"")}" placeholder="08xx xxxx xxxx"><div class="errmsg">Please enter a valid phone number, or leave it empty.</div></div>
       </div>
       ${me ? `<p class="selfnote">This is you, the contact person. Change your name or role in the contact section above.</p>` : ""}
     </div>`;
   }).join("");
-  const full = people.length >= MAX_PEOPLE;
+  const runnersN = people.length - helpers;
+  const full = people.length >= MAX_PEOPLE + MAX_HELPERS || (adults >= MAX_ADULTS && kids >= MAX_CHILDREN && helpers >= MAX_HELPERS);
   $("#addPerson").disabled = full;
-  $("#addPerson").textContent = full ? "Maximum " + MAX_PEOPLE + " participants per registration" : "+ Add participant (" + people.length + "/" + MAX_PEOPLE + ")";
-  $("#peopleHint").textContent = "Up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children per registration, and at least one must be a student or teacher / staff. One goodie bag per family. Children under 2 cannot be registered but may join with a companion.";
-  $("#roleBar").innerHTML = `<span class="rb ${adults >= MAX_ADULTS ? "full" : ""}">Parents / adults <b>${adults}/${MAX_ADULTS}</b></span><span class="rb ${kids >= MAX_CHILDREN ? "full" : ""}">Children <b>${kids}/${MAX_CHILDREN}</b></span>`;
+  $("#addPerson").textContent = full ? "Maximum reached (" + MAX_PEOPLE + " runners and " + MAX_HELPERS + " helpers)" : "+ Add participant (" + runnersN + "/" + MAX_PEOPLE + " runners, " + helpers + "/" + MAX_HELPERS + " helpers)";
+  $("#helperConsent").hidden = helpers === 0;
+  $("#peopleHint").textContent = "Up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children per registration (a child who is not a student: choose Other family member), and at least one must be a student or teacher / staff. A helper who runs with a child (up to " + MAX_HELPERS + ") is added with the role Helper (no bib): no bib number and no medal. One goodie bag per family. Children under 2 cannot be registered but may join with a companion.";
+  $("#roleBar").innerHTML = `<span class="rb ${adults >= MAX_ADULTS ? "full" : ""}">Parents / adults <b>${adults}/${MAX_ADULTS}</b></span><span class="rb ${kids >= MAX_CHILDREN ? "full" : ""}">Children <b>${kids}/${MAX_CHILDREN}</b> <small>(students / other family)</small></span><span class="rb ${helpers >= MAX_HELPERS ? "full" : ""}">Helpers (no bib) <b>${helpers}/${MAX_HELPERS}</b></span>`;
 }
 $("#people").addEventListener("input", e => {
   const box = e.target.closest(".person"); if (!box || !e.target.dataset.k) return;
@@ -1043,6 +1095,7 @@ $("#people").addEventListener("change", e => {
   const i = Number(box.dataset.i);
   people[i].role = e.target.value;
   if (e.target.value !== "Student") people[i].klass = "";
+  if (!isHelper(e.target.value)) people[i].phone = "";
   renderPeople(); renderCart();                     // refresh the counters and which roles are still free
 });
 $("#people").addEventListener("click", e => {
@@ -1051,8 +1104,8 @@ $("#people").addEventListener("click", e => {
   people.splice(i, 1); renderPeople(); renderCart();
 });
 $("#addPerson").addEventListener("click", () => {
-  if (people.length >= MAX_PEOPLE) return;
-  people.push({ name:"", role:"", klass:"" }); renderPeople(); renderCart();
+  if ($("#addPerson").disabled) return;
+  people.push({ name:"", role:"", klass:"", phone:"" }); renderPeople(); renderCart();
   const last = $("#p" + (people.length-1) + "_name"); if (last) last.focus();
 });
 
@@ -1062,15 +1115,17 @@ function setRuns(yes){
   const restore = () => radios.forEach(r => { r.checked = contactRuns !== null && (r.value === "yes") === contactRuns; });
   if (yes){
     if (people.some(p => p.self)) return;
-    if (people.length >= MAX_PEOPLE){ toast("Your registration is full. Remove a participant first."); restore(); return; }
-    if (adultCount() >= MAX_ADULTS){ toast("Already " + MAX_ADULTS + " parents / adults listed. Remove one first."); restore(); return; }
+    const myRole = $("#f_role").value;
+    if ($("#addPerson").disabled){ toast("Your registration is full. Remove a participant first."); restore(); return; }
+    if (isHelper(myRole)){ if (helperCount() >= MAX_HELPERS){ toast("Already " + MAX_HELPERS + " helpers listed. Remove one first."); restore(); return; } }
+    else if (adultCount() >= MAX_ADULTS){ toast("Already " + MAX_ADULTS + " parents / adults listed. Remove one first."); restore(); return; }
     const me = { name: val("f_name"), role: $("#f_role").value, klass: "", self: true };
     const blank = people.length === 1 && !people[0].name && !people[0].role && !people[0].klass;
     if (blank) people[0] = me; else people.unshift(me);
     contactRuns = true;
   } else {
     people = people.filter(p => !p.self);
-    if (!people.length) people = [{ name:"", role:"", klass:"" }];
+    if (!people.length) people = [{ name:"", role:"", klass:"", phone:"" }];
     contactRuns = false;
   }
   setErr("runs", false);
@@ -1300,7 +1355,7 @@ function cartLines(){
 function lineLabel(l){ return l.ck ? `${l.ck.type} · ${l.ck.color} · "${l.ck.text}"` : variantLabel(l.v); }
 function regFeeTotal(){
   if (mode !== "reg" || shopOnly()) return 0;
-  return (regRow ? regRow.price : 0) + (regpRow ? regpRow.price * people.length : 0);   // per family + per runner
+  return (regRow ? regRow.price : 0) + (regpRow ? regpRow.price * (people.length - helperCount()) : 0);   // per family + per runner
 }
 function subtotal(){ return regFeeTotal() + cartLines().reduce((a, l) => a + l.v.price * l.qty, 0); }
 function variantLabel(v){ return [v.group, v.option].filter(Boolean).join(" · "); }
@@ -1311,7 +1366,7 @@ function renderCart(){
   const fee = regFeeTotal();
   let h = "<table>";
   if (mode === "reg" && !shopOnly()){
-    h += `<tr><td class="n"><strong>Registration</strong><small>${people.length} participant${people.length>1?"s":""} · one goodie bag per family</small></td><td class="r">${fee > 0 ? fmt(fee) : "Free"}</td></tr>`;
+    h += `<tr><td class="n"><strong>Registration</strong><small>${people.length - helperCount()} runner${people.length - helperCount()>1?"s":""}${helperCount() ? " + " + helperCount() + " helper" + (helperCount()>1?"s":"") + " (no bib)" : ""} · one goodie bag per family</small></td><td class="r">${fee > 0 ? fmt(fee) : "Free"}</td></tr>`;
   }
   if (!lines.length) h += `<tr><td colspan="2" class="empty">No merchandise added yet. <a href="#shop">Browse the shop</a></td></tr>`;
   lines.forEach(l => {
@@ -1355,13 +1410,16 @@ function validateReg(){
     if (!p.self) bad += setErr("p"+i+"_name", p.name.trim().length < 2);       // participant 1 = the contact person: checked above
     if (!p.self) bad += setErr("p"+i+"_role", !p.role);
     bad += setErr("p"+i+"_klass", p.role === "Student" && !p.klass.trim());
+    bad += setErr("p"+i+"_phone", isHelper(p.role) && !!(p.phone||"").trim() && !phoneOk(p.phone));
   });
+  bad += setErr("f_helperok", helperCount() > 0 && !$("#f_helperok").checked);
+  if (!bad && helperCount() > MAX_HELPERS){ showFormError("One registration can include up to " + MAX_HELPERS + " helpers."); bad++; }
   if (!bad && !people.some(p => p.role === "Student" || p.role === "Teacher / staff")){
     showFormError("Each family group needs at least one student or teacher / staff.");
     bad++;
   }
   if (!bad && (adultCount() > MAX_ADULTS || childCount() > MAX_CHILDREN)){
-    showFormError("One registration can include up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children. Please contact the committee if your family is larger.");
+    showFormError("One registration can include up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children (students, or other family members for children who are not students). Please contact the committee if your family is larger.");
     bad++;
   }
   return bad;
@@ -1394,7 +1452,8 @@ function buildPayload(){
   return Object.assign(base, {
     orderType:"registration",
     contact:{ name:val("f_name"), phone:val("f_phone"), email:val("f_email"), role:$("#f_role").value, participating:contactRuns === true, emergency:val("f_emergency"), notes:val("f_notes") },
-    participants: people.map(p => ({ name:p.name.trim(), role:p.role, klass:p.role === "Student" ? p.klass.trim() : "" }))
+    participants: people.map(p => ({ name:p.name.trim(), role:p.role, klass:p.role === "Student" ? p.klass.trim() : "", phone:isHelper(p.role) ? (p.phone||"").trim() : "" })),
+    helperConsent: helperCount() > 0 && $("#f_helperok").checked
   });
 }
 
@@ -1444,7 +1503,7 @@ function showDone(res, payload){
     ? "Your registration is saved. There is nothing to pay. We will contact you once your family is verified."
     : "Your " + (isMerch ? "order" : "registration") + " is saved. Step 1: transfer the exact amount below. Step 2: upload your payment proof.";
   $("#dPeople").innerHTML = isMerch ? "" : payload.participants.map((p, i) =>
-    `<li><span>${esc(p.name)} <small>(${esc(p.role)}${p.klass ? ", " + esc(p.klass) : ""})</small></span><code>${esc((res.runnerIds && res.runnerIds[i]) || (res.orderId + "-" + String.fromCharCode(65 + i)))}</code></li>`).join("");
+    `<li><span>${esc(p.name)} <small>(${esc(roleLabel(p.role))}${p.klass ? ", " + esc(p.klass) : ""})</small></span><code>${esc((res.runnerIds && res.runnerIds[i]) || (res.orderId + "-" + (isHelper(p.role) ? "H" + (payload.participants.slice(0, i + 1).filter(x => isHelper(x.role)).length) : String.fromCharCode(65 + payload.participants.slice(0, i).filter(x => !isHelper(x.role)).length))))}</code></li>`).join("");
   const bank = (res.bank && res.bank.number) ? res.bank : CONFIG.bank;      // the Sheet's Settings tab is the source of truth
   lastBank = bank;
   $("#dBank").textContent = bank.name; $("#dAcc").textContent = bank.number; $("#dHolder").textContent = bank.holder;
@@ -1452,7 +1511,7 @@ function showDone(res, payload){
   $("#dBankBox").hidden = free;
   const lines = cartLines();
   $("#dItems").innerHTML = (lines.length || !free ? `<div class="lbl">Order summary</div>` : "") +
-    (isMerch ? "" : `<div>${payload.participants.length} participant${payload.participants.length>1?"s":""} · one goodie bag for your family</div>`) +
+    (isMerch ? "" : `<div>${payload.participants.filter(x => !isHelper(x.role)).length} runner${payload.participants.filter(x => !isHelper(x.role)).length>1?"s":""}${payload.participants.some(x => isHelper(x.role)) ? " + " + payload.participants.filter(x => isHelper(x.role)).length + " helper(s), no bib" : ""} · one goodie bag for your family</div>`) +
     lines.map(l => `<div>${l.qty} × ${esc(l.v.product)} (${esc(lineLabel(l))})</div>`).join("") +
     (free ? "" : `<div style="color:var(--muted)">Subtotal ${fmt(res.subtotal)} + unique code ${res.uniqueCode}</div>`);
   // payment proof: the upload form moves into the confirmation, already filled with this order's code and phone
@@ -1545,6 +1604,69 @@ async function shrinkImage(file){
     return blob;
   } finally { if (url) URL.revokeObjectURL(url); if (src && src.close) src.close(); }
 }
+
+/* ---------- check status ---------- */
+const STAGES = {
+  unpaid:    { cls:"warn", title:"Waiting for payment",       text:"We have your order. Transfer the exact amount below, then upload your payment proof." },
+  proof:     { cls:"info", title:"Payment proof received",    text:"Finance is checking your proof against the bank. You do not need to do anything else." },
+  paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records.", merch:"Thank you! The committee will share how to collect your order." },
+  confirmed: { cls:"good", title:"Confirmed",                 text:"You are all set. See you at the Color Fun Run!" },
+  rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee." },
+  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This order was cancelled. If this is unexpected, please contact the committee." }
+};
+let stBusy = false;
+function renderStatus(r){
+  const S = STAGES[r.stage] || STAGES.unpaid;
+  const free = r.free && (r.stage === "unpaid" || r.stage === "paid");
+  const text = r.stage === "paid" ? (r.orderType === "merch" ? S.merch : S.reg) : S.text;
+  let h = `<div class="stpill ${S.cls}">${esc(S.title)}</div><p>Hi ${esc(r.name)}! ${esc(text)}</p>`;
+  h += `<div class="stmeta"><div><span>${r.orderType === "merch" ? "Order code" : "Registration code"}</span><span>${esc(r.orderId)}</span></div>`;
+  if (!r.free) h += `<div><span>Amount</span><span>${fmt(r.total)}</span></div>`;
+  if (r.goodieBag) h += `<div><span>Goodie bag</span><span>Collected</span></div>`;
+  h += `</div>`;
+  if (r.runners && r.runners.length) h += `<div class="lbl">Participants</div><ul>` + r.runners.map(p => `<li><span>${esc(p.name)} <small>(${esc(roleLabel(p.role))}${p.klass ? ", " + esc(p.klass) : ""})</small></span><code>${esc(p.id)}</code></li>`).join("") + `</ul>`;
+  if (r.items) h += `<div class="lbl">Merchandise</div><p style="margin-top:4px">${esc(r.items)}</p>`;
+  if (r.bank && r.bank.number && (r.stage === "unpaid" || r.stage === "proof")){
+    h += `<div class="stbank">Transfer <b>${fmt(r.total)}</b> exactly to ${esc(r.bank.name)} <b>${esc(r.bank.number)}</b> a.n. ${esc(r.bank.holder)}</div>`;
+  }
+  if (r.stage === "unpaid" || r.stage === "proof"){
+    h += `<button class="btn" type="button" id="stUpload" style="width:100%;margin-top:14px">${r.stage === "unpaid" ? "Upload payment proof" : "Upload another proof"}</button>`;
+  }
+  const box = $("#stResult"); box.innerHTML = h; box.hidden = false;
+  const up = $("#stUpload");
+  if (up) up.addEventListener("click", () => {
+    $("#pf_code").value = r.orderId; $("#pf_phone").value = $("#st_phone").value.trim();
+    const t = $("#pay").hidden ? $("#doneProof") : $("#pay");
+    if (t && t.scrollIntoView) t.scrollIntoView({ behavior:"smooth", block:"start" });
+  });
+  box.scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+async function checkStatus(){
+  if (stBusy) return;
+  const err = $("#stErr"), btn = $("#stBtn");
+  err.style.display = "none"; $("#stResult").hidden = true;
+  const code = $("#st_code").value.trim().toUpperCase().replace(/\s+/g, "");
+  const phone = $("#st_phone").value.trim();
+  let bad = 0;
+  bad += setErr("st_code", !/^CF[RM]-\d{3,6}$/.test(code));
+  bad += setErr("st_phone", !phoneOk(phone));
+  if (bad) return;
+  stBusy = true; btn.disabled = true; const label = btn.textContent; btn.textContent = "Checking…";
+  try {
+    let res;
+    if (!CONFIG.API_URL){ await new Promise(r => setTimeout(r, 500)); res = { ok:true, orderId:code, orderType:code.startsWith("CFM") ? "merch" : "registration", name:"Demo", stage:"unpaid", free:false, total:125123, items:"1× Color Fun Run T-Shirt (Adult · M)", runners:[], bank:CONFIG.bank }; }   // demo mode
+    else {
+      const r = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ action:"status", orderId:code, phone:phone }) });
+      res = await r.json();
+    }
+    if (!res.ok){ err.textContent = res.error || "Something went wrong. Please try again."; err.style.display = "block"; return; }
+    renderStatus(res);
+  } catch(e){
+    err.textContent = "We could not reach the server. Please check your connection and try again."; err.style.display = "block";
+  } finally { stBusy = false; btn.disabled = false; btn.textContent = label; }
+}
+$("#stBtn").addEventListener("click", checkStatus);
+["st_code","st_phone"].forEach(id => $("#"+id).addEventListener("keydown", e => { if (e.key === "Enter") checkStatus(); }));
 
 async function uploadProof(){
   if (proofBusy) return;
