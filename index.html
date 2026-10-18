@@ -99,6 +99,7 @@ section>.wrap>h2{font-size:clamp(1.9rem,5vw,2.7rem);margin-bottom:8px}
 .sub{color:var(--muted);margin:0 0 24px;max-width:640px;font-weight:600}
 section.band .sub{color:var(--ink)}
 .stepchip{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:8px;background:var(--ink);color:var(--lime);font-family:var(--pix);font-weight:700;margin-right:10px;vertical-align:.12em;font-size:1.4rem}
+#when{padding-bottom:8px}
 #info{padding-bottom:40px}
 
 /* event info */
@@ -244,6 +245,11 @@ input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px
 .stres .lbl{margin-top:16px}
 .stres ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:6px}
 .stres li{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+.stcancel{margin-top:10px;border:3px solid var(--ink);border-radius:12px;background:#fff;padding:12px 14px}
+.stcancel p{margin:0 0 8px}
+.stcancel .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stcancel .row2 .btn{width:100%}
+@media(max-width:480px){.stcancel .row2{grid-template-columns:1fr}}
 .stbank{margin-top:14px;background:var(--ink);color:#fff;border-radius:10px;padding:12px 14px}
 .stbank b{font-family:var(--num);font-weight:900;color:var(--lime)}
 /* cart */
@@ -343,12 +349,12 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
   <div class="wrap">
     <a class="brand" href="#top"><span class="logos" id="hLogos"></span><span class="brand-t"><b>Color</b> <b>Fun</b> <b>Run</b> 2026</span></a>
     <nav>
-      <a class="hide-sm hide-md" href="#info">Event info</a>
-      <a class="hide-sm hide-md" href="#route">Route</a>
       <a class="hide-sm" href="#register" id="navReg">Register</a>
       <a class="navpill" href="#shop-only" id="navShop">Shop only</a>
       <a class="hide-sm hide-md" href="#status" id="navStatus">Check status</a>
       <a class="hide-sm" href="#pay" id="navPay">Upload proof</a>
+      <a class="hide-sm hide-md" href="#info">Event details</a>
+      <a class="hide-sm hide-md" href="#route">Route</a>
       <a class="hide-sm" href="#faq">FAQ</a>
       <button class="cartbtn" id="cartNav" type="button" aria-label="Go to cart">Cart <span id="cartCount">0</span></button>
     </nav>
@@ -377,25 +383,9 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
   </div>
 </div>
 
-<section id="info" class="band">
+<section id="when" class="band">
   <div class="wrap">
-    <h2>Event info</h2>
     <div class="ww-row" id="whenWhere"></div>
-    <div class="two-col">
-      <div><h3>Race-day schedule</h3><ol class="timeline" id="timeline"></ol></div>
-      <div><h3>Key dates</h3><ol class="timeline" id="keyDates"></ol></div>
-    </div>
-  </div>
-</section>
-
-<section id="route" class="band lime">
-  <div class="wrap">
-    <h2>The route</h2>
-    <p class="sub" id="routeSub"></p>
-    <div class="route-grid">
-      <figure class="routefig" id="routeFig"></figure>
-      <div id="routeDetails"></div>
-    </div>
   </div>
 </section>
 
@@ -598,6 +588,27 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
   </div>
 </section>
 
+<section id="info" class="band">
+  <div class="wrap">
+    <h2>Event details</h2>
+    <div class="two-col">
+      <div><h3>Race-day schedule</h3><ol class="timeline" id="timeline"></ol></div>
+      <div><h3>Key dates</h3><ol class="timeline" id="keyDates"></ol></div>
+    </div>
+  </div>
+</section>
+
+<section id="route" class="band lime">
+  <div class="wrap">
+    <h2>The route</h2>
+    <p class="sub" id="routeSub"></p>
+    <div class="route-grid">
+      <figure class="routefig" id="routeFig"></figure>
+      <div id="routeDetails"></div>
+    </div>
+  </div>
+</section>
+
 <section id="faq">
   <div class="wrap">
     <h2>FAQ</h2>
@@ -794,7 +805,7 @@ let phase = null;           // dates, open/closed flags, spots
 let mode = "reg";           // reg | merch | soon | closed   (what the dates allow)
 let flow = "reg";           // reg | shop: while registration is open, what the visitor chose to do
 
-const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_HELPERS = CONFIG.limits.helpers, MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;   // MAX_PEOPLE = runners (bib + medal)
+const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_HELPERS = CONFIG.limits.helpers, MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;   // MAX_PEOPLE = everyone on one form (runners + helpers), 5 in total
 const isChildRole = r => CONFIG.childRoles.indexOf(r) >= 0;
 const isHelper = r => r === CONFIG.helperRole;
 const roleLabel = r => isHelper(r) ? "Helper, no bib" : r;
@@ -1078,11 +1089,11 @@ function renderPeople(){
     </div>`;
   }).join("");
   const runnersN = people.length - helpers;
-  const full = people.length >= MAX_PEOPLE + MAX_HELPERS || (adults >= MAX_ADULTS && kids >= MAX_CHILDREN && helpers >= MAX_HELPERS);
+  const full = people.length >= MAX_PEOPLE || (adults >= MAX_ADULTS && kids >= MAX_CHILDREN && helpers >= MAX_HELPERS);
   $("#addPerson").disabled = full;
-  $("#addPerson").textContent = full ? "Maximum reached (" + MAX_PEOPLE + " runners and " + MAX_HELPERS + " helpers)" : "+ Add participant (" + runnersN + "/" + MAX_PEOPLE + " runners, " + helpers + "/" + MAX_HELPERS + " helpers)";
+  $("#addPerson").textContent = full ? "Maximum reached (" + MAX_PEOPLE + " people per registration)" : "+ Add participant (" + people.length + "/" + MAX_PEOPLE + " people" + (helpers ? ", incl. " + helpers + " helper" + (helpers > 1 ? "s" : "") : "") + ")";
   $("#helperConsent").hidden = helpers === 0;
-  $("#peopleHint").textContent = "Up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children per registration (a child who is not a student: choose Other family member), and at least one must be a student or teacher / staff. A helper who runs with a child (up to " + MAX_HELPERS + ") is added with the role Helper (no bib): no bib number and no medal. One goodie bag per family. Children under 2 cannot be registered but may join with a companion.";
+  $("#peopleHint").textContent = "Up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children per registration, and no more than " + MAX_PEOPLE + " people in total (helpers included). At least one must be a student (not needed when the contact person is teacher / staff). A child who is not a student: choose Other family member. A helper who runs with a child (up to " + MAX_HELPERS + ") is added with the role Helper (no bib): no bib number and no medal. One goodie bag per family. Children under 2 cannot be registered but may join with a companion.";
   $("#roleBar").innerHTML = `<span class="rb ${adults >= MAX_ADULTS ? "full" : ""}">Parents / adults <b>${adults}/${MAX_ADULTS}</b></span><span class="rb ${kids >= MAX_CHILDREN ? "full" : ""}">Children <b>${kids}/${MAX_CHILDREN}</b> <small>(students / other family)</small></span><span class="rb ${helpers >= MAX_HELPERS ? "full" : ""}">Helpers (no bib) <b>${helpers}/${MAX_HELPERS}</b></span>`;
 }
 $("#people").addEventListener("input", e => {
@@ -1414,8 +1425,9 @@ function validateReg(){
   });
   bad += setErr("f_helperok", helperCount() > 0 && !$("#f_helperok").checked);
   if (!bad && helperCount() > MAX_HELPERS){ showFormError("One registration can include up to " + MAX_HELPERS + " helpers."); bad++; }
-  if (!bad && !people.some(p => p.role === "Student" || p.role === "Teacher / staff")){
-    showFormError("Each family group needs at least one student or teacher / staff.");
+  if (!bad && people.length > MAX_PEOPLE){ showFormError("One registration can include up to " + MAX_PEOPLE + " people in total, helpers included."); bad++; }
+  if (!bad && $("#f_role").value !== "Teacher / staff" && !people.some(p => p.role === "Student")){
+    showFormError("Each registration needs at least one student (unless you are registering as teacher / staff).");
     bad++;
   }
   if (!bad && (adultCount() > MAX_ADULTS || childCount() > MAX_CHILDREN)){
@@ -1612,7 +1624,7 @@ const STAGES = {
   paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records.", merch:"Thank you! The committee will share how to collect your order." },
   confirmed: { cls:"good", title:"Confirmed",                 text:"You are all set. See you at the Color Fun Run!" },
   rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee." },
-  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This order was cancelled. If this is unexpected, please contact the committee." }
+  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee." }
 };
 let stBusy = false;
 function renderStatus(r){
@@ -1632,7 +1644,23 @@ function renderStatus(r){
   if (r.stage === "unpaid" || r.stage === "proof"){
     h += `<button class="btn" type="button" id="stUpload" style="width:100%;margin-top:14px">${r.stage === "unpaid" ? "Upload payment proof" : "Upload another proof"}</button>`;
   }
+  if (r.stage === "unpaid" || r.stage === "proof"){
+    const isReg = r.orderType !== "merch", what = isReg ? "registration" : "order";
+    h += `<button class="btn ghost" type="button" id="stCancel" style="width:100%;margin-top:10px">${isReg ? "Cancel registration" : "Cancel order"}</button>
+      <div class="stcancel" id="stCancelBox" hidden>
+        <p><b>Cancel this ${what}?</b> ${isReg ? "This cancels the whole registration" + (r.items ? " and the merchandise in it" : "") + ", and gives up your family's spots." : "This cancels the whole order."} This cannot be undone. To join again you would need to register again${isReg ? " while registration is still open" : ""}.</p>
+        ${r.stage === "proof" ? `<p><b>You already uploaded a payment proof.</b> If you have transferred money, please also contact the committee about a refund.</p>` : `<p>If you have already transferred money, please do not cancel here. Contact the committee instead.</p>`}
+        <div class="formerr" id="stCancelErr"></div>
+        <div class="row2"><button class="btn" type="button" id="stCancelNo">Keep my ${what}</button><button class="btn primary" type="button" id="stCancelYes">Yes, cancel ${what}</button></div>
+      </div>`;
+  }
   const box = $("#stResult"); box.innerHTML = h; box.hidden = false;
+  const cb = $("#stCancel");
+  if (cb){
+    cb.addEventListener("click", () => { $("#stCancelBox").hidden = false; cb.hidden = true; $("#stCancelBox").scrollIntoView({ behavior:"smooth", block:"nearest" }); });
+    $("#stCancelNo").addEventListener("click", () => { $("#stCancelBox").hidden = true; cb.hidden = false; });
+    $("#stCancelYes").addEventListener("click", () => cancelNow(r));
+  }
   const up = $("#stUpload");
   if (up) up.addEventListener("click", () => {
     $("#pf_code").value = r.orderId; $("#pf_phone").value = $("#st_phone").value.trim();
@@ -1640,6 +1668,25 @@ function renderStatus(r){
     if (t && t.scrollIntoView) t.scrollIntoView({ behavior:"smooth", block:"start" });
   });
   box.scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+let cancelBusy = false;
+async function cancelNow(r){
+  if (cancelBusy) return;
+  const yes = $("#stCancelYes"), no = $("#stCancelNo"), err = $("#stCancelErr");
+  err.style.display = "none";
+  cancelBusy = true; yes.disabled = true; no.disabled = true; const label = yes.textContent; yes.textContent = "Cancelling…";
+  try {
+    let res;
+    if (!CONFIG.API_URL){ await new Promise(x => setTimeout(x, 500)); res = { ok:true, orderId:r.orderId, orderType:r.orderType }; }   // demo mode
+    else {
+      const resp = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ action:"cancel", orderId:r.orderId, phone:$("#st_phone").value.trim() }) });
+      res = await resp.json();
+    }
+    if (!res.ok){ err.textContent = res.error || "Something went wrong. Please try again."; err.style.display = "block"; return; }
+    renderStatus({ ok:true, orderId:r.orderId, orderType:r.orderType, name:r.name, stage:"cancelled", free:r.free, total:r.total, runners:[], items:"" });
+  } catch(e){
+    err.textContent = "We could not reach the server. Please check your connection and try again."; err.style.display = "block";
+  } finally { cancelBusy = false; yes.disabled = false; no.disabled = false; yes.textContent = label; }
 }
 async function checkStatus(){
   if (stBusy) return;
