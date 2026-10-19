@@ -43,6 +43,7 @@ nav{display:flex;gap:18px;align-items:center}
 nav a{color:var(--ink);text-decoration:none;font-weight:800;font-size:.95rem}
 nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px;text-decoration-color:var(--purple)}
 nav a.navpill{background:var(--coral);color:var(--ink);border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 13px;font-family:var(--pix);font-weight:700;font-size:1rem;box-shadow:3px 3px 0 var(--ink);white-space:nowrap;text-decoration:none}
+nav a.navpill.reg{background:var(--lime)}
 nav a.navpill:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .cartbtn{background:var(--ink);color:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 12px;font-family:var(--pix);font-weight:700;font-size:1rem;display:flex;gap:8px;align-items:center}
 .cartbtn span{background:var(--lime);color:var(--ink);border-radius:5px;min-width:22px;height:22px;display:grid;place-items:center;font-size:.85rem;padding:0 6px}
@@ -56,6 +57,19 @@ header.top.has-eventlogo .brand-t{display:none}
   header.top.has-logos .brand-t{display:none}
   nav a.navpill{padding:4px 10px;font-size:.92rem}
   .cartbtn{padding:4px 10px;font-size:.92rem}
+}
+@media(max-width:480px){
+  header.top .wrap{gap:6px}
+  .brand{flex:1 1 0;overflow:hidden;gap:6px}
+  .logos{gap:6px}
+  .logos>:nth-child(n+2){display:none}   /* header is tight on phones: school logo only (the event logo is big in the hero) */
+  .logos img,.logo-slot{height:34px}
+  .logos img{max-width:96px}
+  .logo-slot{min-width:44px;font-size:.5rem}
+  nav{flex:none;gap:5px}
+  nav a.navpill{padding:3px 8px;font-size:.8rem;box-shadow:2px 2px 0 var(--ink)}
+  .cartbtn{padding:3px 8px;font-size:.8rem}
+  .cartbtn span{min-width:18px;height:18px;font-size:.75rem;padding:0 4px}
 }
 
 /* hero */
@@ -309,10 +323,10 @@ details.acc>summary::-webkit-details-marker{display:none}
 details.acc>summary::after{content:"+";flex:none;width:34px;height:34px;border:3px solid var(--ink);border-radius:8px;background:var(--lime);display:grid;place-items:center;font-weight:900;font-size:1.3rem;line-height:1}
 details.acc[open]>summary::after{content:"\2212"}
 .acc-t{font-family:var(--head, inherit);font-weight:900;font-size:1.15rem;display:flex;flex-direction:column;gap:2px}
-.acc-t small{font-size:.85rem;font-weight:600;color:var(--muted)}
+.acc-t small{font-size:.76rem;font-weight:500;color:var(--muted)}
 .acc-t small:empty{display:none}
 .acc-t small{line-height:1.35}
-@media(max-width:600px){details.acc>summary{padding:12px 14px;gap:10px}.acc-t{font-size:1.02rem}.acc-t small{font-size:.74rem;font-weight:500}details.acc>summary::after{width:30px;height:30px;font-size:1.15rem}.acc-b{padding:2px 14px 14px}}
+@media(max-width:600px){details.acc>summary{padding:12px 14px;gap:10px}.acc-t{font-size:1.02rem}.acc-t small{font-size:.7rem}details.acc>summary::after{width:30px;height:30px;font-size:1.15rem}.acc-b{padding:2px 14px 14px}}
 .acc-b{padding:4px 18px 18px;border-top:2px dashed var(--ink)}
 .acc-b h3{margin-top:14px}
 /* faq + footer */
@@ -363,7 +377,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
   <div class="wrap">
     <a class="brand" href="#top"><span class="logos" id="hLogos"></span><span class="brand-t"><b>Color</b> <b>Fun</b> <b>Run</b> 2026</span></a>
     <nav>
-      <a class="hide-sm" href="#register" id="navReg">Register</a>
+      <a class="navpill reg" href="#register" id="navReg">Register</a>
       <a class="navpill" href="#shop-only" id="navShop">Shop only</a>
       <a class="hide-sm hide-md" href="#status" id="navStatus">Check status</a>
       <a class="hide-sm" href="#pay" id="navPay">Upload proof</a>
@@ -1551,7 +1565,7 @@ function showDone(res, payload){
   }
   const sentTo = res.emailed ? "We also emailed these details to " + (isMerch ? payload.buyer.email : payload.contact.email) + " (check your spam folder if you do not see it). " : "";
   $("#dTip").textContent = sentTo + (free
-    ? "We will contact you on via e-mail once your family is verified."
+    ? "We will contact you on your WhatsApp number once your family is verified."
     : "Tip: take a screenshot of this page and keep your code. If you close this page, you can upload your proof later from the \"Upload payment proof\" section, using your code and WhatsApp number.");
   $("#againBtn").hidden = isMerch;
   $("#cartPanel").style.display = "none";
@@ -1636,8 +1650,8 @@ const STAGES = {
   proof:     { cls:"info", title:"Payment proof received",    text:"Finance is checking your proof against the bank. You do not need to do anything else." },
   paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records.", merch:"Thank you! The committee will share how to collect your order." },
   confirmed: { cls:"good", title:"Confirmed",                 text:"You are all set. See you at the Color Fun Run!" },
-  rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee via Korlas/FKOM." },
-  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee via Korlas/FKOM." }
+  rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee." },
+  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee." }
 };
 let stBusy = false;
 function renderStatus(r){
