@@ -34,20 +34,25 @@ button{font:inherit;cursor:pointer;color:inherit}
 /* header */
 header.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:var(--bw) solid var(--ink)}
 header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:74px;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--pix);font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--ink);white-space:nowrap;min-width:0}
+.brand{flex:none;display:flex;align-items:center;gap:8px;font-family:var(--pix);font-weight:700;font-size:1.25rem;text-decoration:none;color:var(--ink);white-space:nowrap;min-width:0}
 .brand-t b:nth-child(1){color:#e0383a}.brand-t b:nth-child(2){color:#5b16d4}.brand-t b:nth-child(3){color:#0a8f9e}
-.logos{display:flex;align-items:center;gap:10px}
-.logos img{display:block;height:54px;width:auto;max-width:170px;object-fit:contain}
+.logos{display:flex;align-items:center;gap:7px}
+.logos img{display:block;height:34px;width:auto;max-width:170px;object-fit:contain}
+.logos img.rect{height:28px}
+.logos img:last-child{height:40px}
 .logo-slot{display:grid;place-items:center;height:48px;min-width:62px;padding:0 6px;border:2px dashed var(--muted);border-radius:8px;color:var(--muted);font:700 .62rem/1.15 var(--pix);text-align:center;text-transform:uppercase;letter-spacing:.04em}
-nav{display:flex;gap:18px;align-items:center}
-nav a{color:var(--ink);text-decoration:none;font-weight:800;font-size:.95rem}
+nav{display:flex;gap:11px;align-items:center;flex:none}
+nav a{white-space:nowrap}
+nav a{color:var(--ink);text-decoration:none;font-weight:800;font-size:.9rem}
 nav a:hover{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px;text-decoration-color:var(--purple)}
-nav a.navpill{background:var(--coral);color:var(--ink);border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 13px;font-family:var(--pix);font-weight:700;font-size:1rem;box-shadow:3px 3px 0 var(--ink);white-space:nowrap;text-decoration:none}
+nav a.navpill{background:var(--coral);color:var(--ink);border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 11px;font-family:var(--pix);font-weight:700;font-size:.95rem;box-shadow:3px 3px 0 var(--ink);white-space:nowrap;text-decoration:none}
 nav a.navpill.reg{background:var(--lime)}
 nav a.navpill:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .cartbtn{background:var(--ink);color:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 12px;font-family:var(--pix);font-weight:700;font-size:1rem;display:flex;gap:8px;align-items:center}
 .cartbtn span{background:var(--lime);color:var(--ink);border-radius:5px;min-width:22px;height:22px;display:grid;place-items:center;font-size:.85rem;padding:0 6px}
 header.top.has-eventlogo .brand-t{display:none}
+@media(max-width:1279px){nav a.hide-lg{display:none}}
+@media(max-width:1139px){nav a.hide-ml{display:none}}
 @media(max-width:1060px){nav{gap:12px}nav a.hide-md{display:none}}
 @media(max-width:640px){
   nav a.hide-sm{display:none}nav{gap:8px}
@@ -58,11 +63,11 @@ header.top.has-eventlogo .brand-t{display:none}
   nav a.navpill{padding:4px 10px;font-size:.92rem}
   .cartbtn{padding:4px 10px;font-size:.92rem}
 }
+@media(max-width:1000px){.logos>:nth-child(n+2){display:none}}   /* small screens: the menu comes first, so the header keeps only the first logo; all logos are in the footer */
 @media(max-width:480px){
   header.top .wrap{gap:6px}
   .brand{flex:1 1 0;overflow:hidden;gap:6px}
   .logos{gap:6px}
-  .logos>:nth-child(n+2){display:none}   /* header is tight on phones: school logo only (the event logo is big in the hero) */
   .logos img,.logo-slot{height:34px}
   .logos img{max-width:96px}
   .logo-slot{min-width:44px;font-size:.5rem}
@@ -88,7 +93,8 @@ header.top.has-eventlogo .brand-t{display:none}
 .kicker{display:inline-block;background:#fff;color:var(--ink);font-family:var(--pix);font-weight:700;border:var(--bw) solid var(--ink);box-shadow:3px 3px 0 var(--ink);border-radius:8px;padding:4px 14px;font-size:.95rem;letter-spacing:.06em}
 .herologo{display:block;width:min(600px,88vw);height:auto;margin:22px auto 26px}
 .h1fallback{font-family:var(--pix);font-size:clamp(2.6rem,9vw,5rem);margin:18px 0 10px;color:var(--ink);text-shadow:4px 4px 0 #fff}
-.hero p.lead{display:inline-block;font-size:1.1rem;font-weight:800;max-width:560px;margin:0 auto 28px;color:var(--ink);background:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:8px 16px;box-shadow:4px 4px 0 var(--ink)}
+.hero p.lead{display:inline-block;font-size:.82rem;line-height:1.35;font-weight:700;max-width:420px;margin:0 auto 22px;color:var(--ink);background:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
+@media(max-width:640px){.hero p.lead{font-size:.74rem;max-width:300px;padding:5px 10px;margin-bottom:18px}}
 .btn{display:inline-block;border:var(--bw) solid var(--ink);border-radius:10px;padding:11px 22px;font-family:var(--pix);font-weight:700;text-decoration:none;font-size:1.1rem;color:var(--ink);transition:transform .08s,box-shadow .08s}
 .btn.primary{background:var(--lime);box-shadow:5px 5px 0 var(--ink)}
 .btn.ghost{background:#fff;box-shadow:5px 5px 0 var(--ink)}
@@ -342,6 +348,10 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
 .sponsor{display:grid;place-items:center;height:64px;min-width:110px;max-width:170px;padding:8px 14px;background:#fff;border-radius:8px;border:2px solid #fff}
 .sponsor img{display:block;max-height:46px;max-width:140px;width:auto;height:auto;object-fit:contain}
 .sponsor.slot{background:transparent;border:2px dashed #8f8bb5;color:#bdb9dd;font:700 .7rem/1.2 var(--pix);text-transform:uppercase;letter-spacing:.05em}
+.foot-logos{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px 22px;padding-bottom:22px;margin-bottom:22px;border-bottom:2px dashed rgba(255,255,255,.3)}
+.foot-logos img{display:block;height:64px;width:auto;max-width:200px;object-fit:contain}
+.foot-logos img.rect{height:52px}
+@media(max-width:640px){.foot-logos img{height:52px}.foot-logos img.rect{height:42px}}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:34px}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:24px}}
 .foot-grid p{margin:0 0 10px;color:#e4e1f7;font-weight:600}
@@ -379,10 +389,9 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <nav>
       <a class="navpill reg" href="#register" id="navReg">Register</a>
       <a class="navpill" href="#shop-only" id="navShop">Shop only</a>
-      <a class="hide-sm hide-md" href="#status" id="navStatus">Check status</a>
+      <a class="hide-sm hide-md hide-ml" href="#status" id="navStatus">Check status</a>
       <a class="hide-sm" href="#pay" id="navPay">Upload proof</a>
-      <a class="hide-sm hide-md" href="#info">Event details</a>
-      <a class="hide-sm hide-md" href="#route">Route</a>
+      <a class="hide-sm hide-md hide-lg" href="#info">Event details</a>
       <a class="hide-sm" href="#faq">FAQ</a>
       <button class="cartbtn" id="cartNav" type="button" aria-label="Go to cart">Cart <span id="cartCount">0</span></button>
     </nav>
@@ -648,6 +657,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
 <footer>
   <div class="stripe" style="margin:-28px 0 22px"></div>
   <div class="wrap">
+    <div class="foot-logos" id="fLogos" hidden></div>
     <div class="foot-sponsors" id="fSponsors" hidden>
       <small class="foot-h">Supported by</small>
       <div class="sponsor-row" id="sponsorRow"></div>
@@ -679,9 +689,9 @@ const CONFIG = {
   API_URL: "https://script.google.com/macros/s/AKfycbxD8xrrS0eu3j3IGLO9Jp4gck31PGbXIO_3HJsG56c1jKkcRpXx5KFo97vyqswjT175/exec",
 
   // NOTE: school, times, place and schedule below are carried over from last year's form. Please confirm.
-  schoolName: "SD Bakti Mulya 400",
+  schoolName: "SD Bakti Mulya 400 Pondok Pinang",
 
-  // Header logos. Put the files in the "images" folder. PNG, SVG or WebP, transparent background, at least 200 px tall
+  // Header logos: the logos listed in partnerLogos (below) followed by the event logo here. Put the files in the "images" folder. PNG, SVG or WebP, transparent background, at least 200 px tall
   // (shown about 46 px high). The event logo (BM Color Fun Run 2026) is already set; the school logo is still empty:
   // add e.g. "logo-school.png". An empty logo shows a dashed placeholder while you preview the site and nothing once
   // API_URL is set. While the event logo is set, the written event name is hidden in the header.
@@ -714,6 +724,12 @@ const CONFIG = {
   // Header photo carousel: last year's event photos. Put the files in an "images" folder next to
   // index.html and list them here, e.g. ["2025-01.jpg", "2025-02.jpg", "2025-03.jpg"].
   // Landscape photos, about 1600 px wide, under ~400 KB each. Empty list = colorful placeholder.
+  // Shown in the header (next to the event logo) and again in the footer: school, parents association (FKOM), committee.
+  partnerLogos: [
+    { src: "logo-school.png",    alt: "SD Bakti Mulya 400" },
+    { src: "logo-fkom.png",      alt: "FKOM (parents association)", rect: true },
+    { src: "logo-committee.png", alt: "FKOM sie. Olahraga (sports committee)" }
+  ],
   heroImages: [],
 
   // When / Time / Where
@@ -722,7 +738,7 @@ const CONFIG = {
   dateNote: "",
   timeMain: "06:30 WIB",
   timeNote: "Stand by from 06:00",                       // confirm
-  placeMain: "SD Bakti Mulya 400",
+  placeMain: "SD Bakti Mulya 400 Pondok Pinang",
   placeNote: "Gate Basement, Jakarta Selatan",           // confirm
   mapsUrl: "",                                           // paste a Google Maps link to show "Open in Maps"
 
@@ -801,11 +817,11 @@ const CONFIG = {
     ["Can my child under 2 join?", "Children under 2 cannot be registered, but they are welcome to join with a companion."],
     ["How do I pay?", "After you submit, you will see the exact amount, our BRI bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
     ["I closed the page before uploading my payment proof. What now?", "No problem. Scroll to \"Upload payment proof\" on this website and enter your registration code and the WhatsApp number you registered with."],
-    ["When is my registration confirmed?", "Once finance has matched your payment and the committee has verified your family against school records. You can CHECK STATUS on the website by entering registration code and your registered WhatsApp number"],
+    ["When is my registration confirmed?", "Once finance has matched your payment and the committee has verified your family against school records. We do not message each family individually. Use \"Check your status\" on this website at any time, with your registration code and the WhatsApp number you registered with. It shows Confirmed once everything is done. General event updates are sent through the event WhatsApp broadcast."],
     ["Can I buy merchandise without registering?", "Yes. Use \"Shop only\" at the top of the page: no registration needed, until the merchandise deadline shown above. If you already registered, add your registration code so we can link the two."],
     ["What should we wear?", "Modest clothing. A white top is recommended so the colors show up!"],
     ["Parking?", "Parking is not available. Please use drop-off only."],
-    ["When do we collect race packs and merchandise?", "Details will be shared via WhatsApp closer to race day."]
+    ["When do we collect race packs and merchandise?", "Details will be shared in the event WhatsApp broadcast and on this website closer to race day."]
   ]
 };
 
@@ -1056,9 +1072,15 @@ function renderStatic(){
 
   // header logos
   const L = CONFIG.logos || {};
-  const logos = [[L.school, L.schoolAlt || "School logo", "School logo"], [L.event, L.eventAlt || "Event logo", "Event logo"]]
-    .map(x => x[0] ? `<img src="${imgSrc(x[0])}" alt="${esc(x[1])}">` : (preview ? `<span class="logo-slot" title="Add your logo in CONFIG.logos">${esc(x[2])}</span>` : "")).join("");
+  const partners = (CONFIG.partnerLogos || []).filter(l => l && l.src);
+  const logoImg = (src, alt, rect) => `<img src="${imgSrc(src)}" alt="${esc(alt || "")}"${rect ? ' class="rect"' : ""}>`;
+  const logos = partners.map(l => logoImg(l.src, l.alt, l.rect)).join("")
+    + (L.event ? logoImg(L.event, L.eventAlt || "Event logo", false) : "")
+    + (!partners.length && preview ? `<span class="logo-slot" title="Add your logos in CONFIG.partnerLogos">Logos</span>` : "");
   $("#hLogos").innerHTML = logos;
+  // footer: the same logos again (event logo first, then school, parents association, committee)
+  $("#fLogos").innerHTML = (L.event ? logoImg(L.event, L.eventAlt || "Event logo", false) : "") + partners.map(l => logoImg(l.src, l.alt, l.rect)).join("");
+  $("#fLogos").hidden = !$("#fLogos").innerHTML;
   $(".top").classList.toggle("has-logos", !!logos);
   $(".top").classList.toggle("has-eventlogo", !!L.event);
 
@@ -1539,7 +1561,7 @@ function showDone(res, payload){
   $("#dCode").textContent = res.orderId;
   $("#dStatus").textContent = free ? "Registered" : "Waiting for payment";
   $("#dSub").textContent = free
-    ? "Your registration is saved. There is nothing to pay. We will contact you once your family is verified."
+    ? "Your registration is saved. There is nothing to pay. Once your family is verified, your status changes to Confirmed. Check it any time with \"Check your status\" on this website, using your code and WhatsApp number."
     : "Your " + (isMerch ? "order" : "registration") + " is saved. Step 1: transfer the exact amount below. Step 2: upload your payment proof.";
   $("#dPeople").innerHTML = isMerch ? "" : payload.participants.map((p, i) =>
     `<li><span>${esc(p.name)} <small>(${esc(roleLabel(p.role))}${p.klass ? ", " + esc(p.klass) : ""})</small></span><code>${esc((res.runnerIds && res.runnerIds[i]) || (res.orderId + "-" + (isHelper(p.role) ? "H" + (payload.participants.slice(0, i + 1).filter(x => isHelper(x.role)).length) : String.fromCharCode(65 + payload.participants.slice(0, i).filter(x => !isHelper(x.role)).length))))}</code></li>`).join("");
@@ -1565,7 +1587,7 @@ function showDone(res, payload){
   }
   const sentTo = res.emailed ? "We also emailed these details to " + (isMerch ? payload.buyer.email : payload.contact.email) + " (check your spam folder if you do not see it). " : "";
   $("#dTip").textContent = sentTo + (free
-    ? "We will contact you on your WhatsApp number once your family is verified."
+    ? "Keep your code. Once your family is verified, your status changes to Confirmed: check it any time with \"Check your status\" on this website, using your code and WhatsApp number. General event updates come through the event WhatsApp broadcast."
     : "Tip: take a screenshot of this page and keep your code. If you close this page, you can upload your proof later from the \"Upload payment proof\" section, using your code and WhatsApp number.");
   $("#againBtn").hidden = isMerch;
   $("#cartPanel").style.display = "none";
@@ -1648,7 +1670,7 @@ async function shrinkImage(file){
 const STAGES = {
   unpaid:    { cls:"warn", title:"Waiting for payment",       text:"We have your order. Transfer the exact amount below, then upload your payment proof." },
   proof:     { cls:"info", title:"Payment proof received",    text:"Finance is checking your proof against the bank. You do not need to do anything else." },
-  paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records.", merch:"Thank you! The committee will share how to collect your order." },
+  paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records. There is no separate message: check this page again later, it will show Confirmed once done.", merch:"Thank you! Collection details will be shared in the event announcements. You can check this page any time." },
   confirmed: { cls:"good", title:"Confirmed",                 text:"You are all set. See you at the Color Fun Run!" },
   rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee." },
   cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee." }
