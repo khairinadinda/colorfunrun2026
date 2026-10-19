@@ -311,6 +311,8 @@ details.acc[open]>summary::after{content:"\2212"}
 .acc-t{font-family:var(--head, inherit);font-weight:900;font-size:1.15rem;display:flex;flex-direction:column;gap:2px}
 .acc-t small{font-size:.85rem;font-weight:600;color:var(--muted)}
 .acc-t small:empty{display:none}
+.acc-t small{line-height:1.35}
+@media(max-width:600px){details.acc>summary{padding:12px 14px;gap:10px}.acc-t{font-size:1.02rem}.acc-t small{font-size:.74rem;font-weight:500}details.acc>summary::after{width:30px;height:30px;font-size:1.15rem}.acc-b{padding:2px 14px 14px}}
 .acc-b{padding:4px 18px 18px;border-top:2px dashed var(--ink)}
 .acc-b h3{margin-top:14px}
 /* faq + footer */
@@ -1549,7 +1551,7 @@ function showDone(res, payload){
   }
   const sentTo = res.emailed ? "We also emailed these details to " + (isMerch ? payload.buyer.email : payload.contact.email) + " (check your spam folder if you do not see it). " : "";
   $("#dTip").textContent = sentTo + (free
-    ? "We will contact you on your WhatsApp number once your family is verified."
+    ? "We will contact you on via e-mail once your family is verified."
     : "Tip: take a screenshot of this page and keep your code. If you close this page, you can upload your proof later from the \"Upload payment proof\" section, using your code and WhatsApp number.");
   $("#againBtn").hidden = isMerch;
   $("#cartPanel").style.display = "none";
@@ -1634,8 +1636,8 @@ const STAGES = {
   proof:     { cls:"info", title:"Payment proof received",    text:"Finance is checking your proof against the bank. You do not need to do anything else." },
   paid:      { cls:"good", title:"Payment received",          reg:"Thank you! We are now verifying your family against school records.", merch:"Thank you! The committee will share how to collect your order." },
   confirmed: { cls:"good", title:"Confirmed",                 text:"You are all set. See you at the Color Fun Run!" },
-  rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee." },
-  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee." }
+  rejected:  { cls:"bad",  title:"Not confirmed",             text:"We could not confirm this registration. Please contact the committee via Korlas/FKOM." },
+  cancelled: { cls:"bad",  title:"Cancelled",                 text:"This has been cancelled. If this is unexpected, please contact the committee via Korlas/FKOM." }
 };
 let stBusy = false;
 function renderStatus(r){
