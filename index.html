@@ -173,12 +173,16 @@ ol.timeline li.next strong{background:var(--lime);display:inline-block;padding:0
 @media(max-width:640px){.grid2{grid-template-columns:1fr}}
 label{display:block;font-weight:800;font-size:.9rem;margin-bottom:5px}
 label .opt{color:var(--muted);font-weight:600}
-input,select{width:100%;font:inherit;font-weight:600;padding:11px 13px;border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink)}
+input,select,textarea{width:100%;font:inherit;font-weight:600;padding:11px 13px;border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink)}
 input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px 3px 0 var(--ink)}
 .field{margin-bottom:14px}
-.field.err input,.field.err select{border-color:var(--err);box-shadow:0 0 0 2px var(--err)}
+.field.err input,.field.err select,.field.err textarea{border-color:var(--err);box-shadow:0 0 0 2px var(--err)}
 .errmsg{color:var(--err);font-size:.82rem;font-weight:800;margin-top:4px;display:none}
 .field.err .errmsg{display:block}
+.linkbtn{background:none;border:0;padding:6px 0;color:var(--ink);font-weight:800;text-decoration:underline;cursor:pointer;font-size:1rem}
+.subtool{margin-top:14px;border-top:2px dashed var(--ink);padding-top:8px}
+.ask{margin-top:30px}
+.ask textarea,.ask select,#fcBox input{width:100%}
 .hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
 .check{display:flex;gap:10px;align-items:flex-start;font-weight:600}
 .check input{width:22px;height:22px;margin-top:2px;flex:none;accent-color:var(--ink)}
@@ -603,6 +607,21 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
       <div class="formerr" id="stErr"></div>
       <button class="btn primary" id="stBtn" type="button" style="width:100%">Check status</button>
       <div id="stResult" class="stres" hidden></div>
+      <div class="subtool">
+        <button type="button" class="linkbtn" id="fcToggle" aria-expanded="false" aria-controls="fcBox">Forgot your code?</button>
+        <div id="fcBox" hidden>
+          <p class="sub" style="margin:8px 0 10px">Enter the WhatsApp number you registered with. We email your code to the email address on the form. It is never shown on this page, so nobody else can look it up.</p>
+          <div class="field" data-f="fc_phone">
+            <label for="fc_phone">WhatsApp number</label>
+            <input id="fc_phone" type="tel" inputmode="tel" placeholder="08xx xxxx xxxx" autocomplete="off">
+            <div class="errmsg">Please enter the phone number you registered with.</div>
+          </div>
+          <div class="hp" aria-hidden="true"><label>Leave empty<input id="fc_hp" tabindex="-1" autocomplete="off"></label></div>
+          <div class="formerr" id="fcErr"></div>
+          <div class="okbox" id="fcOk" hidden></div>
+          <button class="btn small" id="fcBtn" type="button">Email me my code</button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -664,6 +683,26 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <h2>FAQ</h2>
     <p class="sub"></p>
     <div id="faqList"></div>
+    <div class="panel ask" id="ask">
+      <h3>Still have a question?</h3>
+      <p class="sub" style="margin:0 0 10px">Send it to the committee and we reply by email. Please check the FAQ above first.</p>
+      <button type="button" class="btn small" id="askToggle" aria-expanded="false" aria-controls="askForm">Ask a question</button>
+      <div id="askForm" hidden>
+        <div class="grid2" style="margin-top:14px">
+          <div class="field" data-f="a_name"><label for="a_name">Your name</label><input id="a_name" autocomplete="name"><div class="errmsg">Please enter your name.</div></div>
+          <div class="field" data-f="a_email"><label for="a_email">Email <span class="opt">(we reply here)</span></label><input id="a_email" type="email" autocomplete="email"><div class="errmsg">Please enter a valid email address.</div></div>
+          <div class="field" data-f="a_phone"><label for="a_phone">WhatsApp number <span class="opt">(optional)</span></label><input id="a_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xx xxxx xxxx"><div class="errmsg">Please enter a valid phone number or leave it empty.</div></div>
+          <div class="field" data-f="a_code"><label for="a_code">Registration / order code <span class="opt">(optional)</span></label><input id="a_code" autocapitalize="characters" autocomplete="off" placeholder="e.g. CFR-0012"></div>
+          <div class="field" data-f="a_topic"><label for="a_topic">About</label>
+            <select id="a_topic"><option>Registration</option><option>Payment</option><option>Merchandise</option><option>Event day</option><option>Other</option></select></div>
+        </div>
+        <div class="field" data-f="a_msg"><label for="a_msg">Your question</label><textarea id="a_msg" rows="5" maxlength="1500"></textarea><div class="errmsg">Please write your question (at least 10 characters).</div></div>
+        <div class="hp" aria-hidden="true"><label>Leave empty<input id="a_hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="formerr" id="askErr"></div>
+        <div class="okbox" id="askOk" hidden></div>
+        <button class="btn primary" id="askBtn" type="button" style="width:100%">Send question</button>
+      </div>
+    </div>
   </div>
 </section>
 </main>
@@ -802,14 +841,14 @@ const CONFIG = {
       images: [ { src:"tshirt-pop.jpg", label:"PIXEL POP" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "T-Shirt PIXEL RUN": { icon: "👕", desc: "Official event tee, design PIXEL RUN. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
       images: [ { src:"tshirt-run.jpg", label:"PIXEL RUN" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
-    "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 9 letters).",
+    "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 7 letters).",
       images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" } ] }
   },
-  // Personalised clicker. Prices come from the Sheet (Products tab, SKUs below): CK-S = up to 5 letters, CK-L = 6 to 9 letters.
+  // Personalised clicker. Prices come from the Sheet (Products tab, SKUs below): CK-S = up to 4 letters, CK-L = 5 to 7 letters.
   clicker: {
     product: "Clicker Toy",
-    maxLetters: 9,
-    tiers: [ { sku:"CK-S", max:5 }, { sku:"CK-L", max:9 } ],
+    maxLetters: 7,
+    tiers: [ { sku:"CK-S", max:4 }, { sku:"CK-L", max:7 } ],
     types:  ["HEXA","SQUARE"],
     colors: ["Color 1","Color 2","Color 3","Color 4"]
   },
@@ -827,8 +866,8 @@ const CONFIG = {
       ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-ADT-"+s, d[1], "Adult", s, adult[s], 99));
       ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-KID-"+s, d[1], "Kids", s, 100000, 99));
     });
-    add("CK-S", "Clicker Toy", "1-5 letters", "Name", 65000, 99);
-    add("CK-L", "Clicker Toy", "6-9 letters", "Name", 75000, 99);
+    add("CK-S", "Clicker Toy", "1-4 letters", "Name", 55000, 99);
+    add("CK-L", "Clicker Toy", "5-7 letters", "Name", 67000, 99);
     add("REG", "Registration fee (per family)", "", "", 0, 9999);
     add("REGP", "Registration fee (per runner)", "", "", 0, 9999);
     return rows;
@@ -1342,7 +1381,7 @@ function clickerCard(name, rows, info){
   card.innerHTML = imgArea(name, info) + `<div class="pbody"><h3>${esc(name)}</h3>${info.desc ? `<p>${esc(info.desc)}</p>` : ""}
     <div><div class="lbl">Shape</div><div class="pills">${C.types.map(t => `<button type="button" class="pill ${t===ckSel.type?"on":""}" data-act="cktype" data-v="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
     <div><div class="lbl">Color</div><div class="pills">${C.colors.map(t => `<button type="button" class="pill ${t===ckSel.color?"on":""}" data-act="ckcolor" data-v="${esc(t)}">${esc(t)}</button>`).join("")}</div></div>
-    <div><div class="lbl">Name on the clicker</div><input class="ckname" id="ckText" maxlength="12" autocomplete="off" autocapitalize="characters" placeholder="E.g. ALYA" value="${esc(ckSel.text)}"><div class="ckmeta" id="ckMeta"><span id="ckCount"></span><span>Letters A to Z only</span></div></div>
+    <div><div class="lbl">Name on the clicker</div><input class="ckname" id="ckText" maxlength="10" autocomplete="off" autocapitalize="characters" placeholder="E.g. ALYA" value="${esc(ckSel.text)}"><div class="ckmeta" id="ckMeta"><span id="ckCount"></span><span>Letters A to Z only</span></div></div>
     ${prices ? `<div class="sizehelp">${esc(prices)}</div>` : ""}
     <div class="pfoot"><div><div class="price" id="ckPrice">-</div></div><button type="button" class="addbtn" id="ckAdd" data-act="addck" disabled>Add to cart</button></div></div>`;
   const input = card.querySelector("#ckText");
@@ -1808,6 +1847,66 @@ async function checkStatus(){
   } finally { stBusy = false; btn.disabled = false; btn.textContent = label; }
 }
 $("#stBtn").addEventListener("click", checkStatus);
+/* ---------- forgot code (emailed, never shown) + helpdesk ---------- */
+async function callApi(body){
+  const r = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+  return r.json();
+}
+function toggleBox(btnId, boxId, focusId){
+  const b = $("#" + btnId), box = $("#" + boxId), open = box.hidden;
+  box.hidden = !open; b.setAttribute("aria-expanded", String(open));
+  if (open && focusId) $("#" + focusId).focus({ preventScroll:false });
+}
+$("#fcToggle").addEventListener("click", () => toggleBox("fcToggle", "fcBox", "fc_phone"));
+$("#askToggle").addEventListener("click", () => toggleBox("askToggle", "askForm", "a_name"));
+let fcBusy = false;
+async function sendFindCode(){
+  if (fcBusy) return;
+  const err = $("#fcErr"), ok = $("#fcOk"), btn = $("#fcBtn"), phone = $("#fc_phone").value.trim();
+  err.style.display = "none"; ok.hidden = true;
+  if (setErr("fc_phone", !phoneOk(phone))) return;
+  fcBusy = true; btn.disabled = true; const label = btn.textContent; btn.textContent = "Sending…";
+  try {
+    const res = CONFIG.API_URL ? await callApi({ action:"findcode", phone:phone, hp:$("#fc_hp").value }) : { ok:true, message:"Demo mode: no email is sent." };
+    if (res.ok){ ok.textContent = res.message; ok.hidden = false; }
+    else { err.textContent = res.error || "Something went wrong. Please try again."; err.style.display = "block"; }
+  } catch(e){ err.textContent = "We could not reach the server. Please check your connection and try again."; err.style.display = "block"; }
+  finally { fcBusy = false; btn.disabled = false; btn.textContent = label; }
+}
+$("#fcBtn").addEventListener("click", sendFindCode);
+$("#fc_phone").addEventListener("keydown", e => { if (e.key === "Enter") sendFindCode(); });
+$("#fc_phone").addEventListener("input", () => $("#fc_phone").closest(".field").classList.remove("err"));
+
+let askBusy = false;
+async function sendQuestion(){
+  if (askBusy) return;
+  const err = $("#askErr"), ok = $("#askOk"), btn = $("#askBtn");
+  err.style.display = "none"; ok.hidden = true;
+  const name = val("a_name"), email = val("a_email"), phone = val("a_phone"), msg = val("a_msg");
+  let bad = 0;
+  bad += setErr("a_name", name.length < 2);
+  bad += setErr("a_email", !emailOk(email));
+  bad += setErr("a_phone", !!phone && !phoneOk(phone));
+  bad += setErr("a_msg", msg.length < 10);
+  if (bad){ const f = $("#ask .field.err"); if (f && f.scrollIntoView) f.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
+  askBusy = true; btn.disabled = true; const label = btn.textContent; btn.textContent = "Sending…";
+  try {
+    const body = { action:"help", name:name, email:email, phone:phone, code:val("a_code").toUpperCase().replace(/\s+/g, ""), topic:$("#a_topic").value, message:msg, hp:$("#a_hp").value };
+    let res = null;
+    if (!CONFIG.API_URL) res = { ok:true, ticket:"HD-DEMO" };
+    else {
+      for (let i = 0; i < 3 && !(res && (res.ok || !res.busy)); i++){ if (i) await new Promise(r => setTimeout(r, 2500)); res = await callApi(body); }
+    }
+    if (res.ok){
+      ok.textContent = "Thank you! Your question is sent (ticket " + res.ticket + "). We reply by email to " + email + ", please also check your spam folder.";
+      ok.hidden = false; $("#a_msg").value = ""; $("#a_code").value = "";
+    } else { err.textContent = res.error || "Something went wrong. Please try again."; err.style.display = "block"; }
+  } catch(e){ err.textContent = "We could not reach the server. Please check your connection and try again."; err.style.display = "block"; }
+  finally { askBusy = false; btn.disabled = false; btn.textContent = label; }
+}
+$("#askBtn").addEventListener("click", sendQuestion);
+["a_name","a_email","a_phone","a_msg"].forEach(id => $("#"+id).addEventListener("input", () => $("#"+id).closest(".field").classList.remove("err")));
+
 ["st_code","st_phone"].forEach(id => $("#"+id).addEventListener("keydown", e => { if (e.key === "Enter") checkStatus(); }));
 
 async function uploadProof(){
