@@ -82,19 +82,10 @@ header.top.has-eventlogo .brand-t{display:none}
 .hero.t-purple{--hbg:var(--purple)}.hero.t-lime{--hbg:var(--lime)}.hero.t-coral{--hbg:var(--coral)}.hero.t-cyan{--hbg:var(--cyan)}.hero.t-white{--hbg:#fff}
 .hero::before{content:"";position:absolute;inset:0;z-index:0;opacity:.9;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' shape-rendering='crispEdges'%3E%3Cg fill='%23CDFE02'%3E%3Crect x='24' y='36' width='18' height='18'/%3E%3Crect x='222' y='150' width='12' height='12'/%3E%3Crect x='96' y='252' width='18' height='18'/%3E%3C/g%3E%3Cg fill='%23FF5C5D'%3E%3Crect x='150' y='24' width='12' height='12'/%3E%3Crect x='252' y='60' width='18' height='18'/%3E%3Crect x='42' y='198' width='12' height='12'/%3E%3C/g%3E%3Cg fill='%2301E5FE'%3E%3Crect x='78' y='108' width='12' height='12'/%3E%3Crect x='204' y='234' width='18' height='18'/%3E%3Crect x='270' y='252' width='12' height='12'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Crect x='186' y='90' width='12' height='12'/%3E%3Crect x='12' y='132' width='6' height='6'/%3E%3Crect x='138' y='168' width='6' height='6'/%3E%3C/g%3E%3C/svg%3E") 0 0/300px 300px}
 .hero.t-white::before,.hero.t-lime::before{opacity:.55}
-.hero.has-photos::before{display:none}
-.slides{position:absolute;inset:0;z-index:0}
-.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1s ease}
-.slide.on{opacity:1}
-.slide.ph{display:none}
-.hero-shade{position:absolute;inset:0;z-index:1;display:none}
-.hero.has-photos .hero-shade{display:block;background:linear-gradient(180deg,rgba(13,13,18,.45),rgba(13,13,18,.7))}
 .hero .wrap{position:relative;z-index:2}
 .kicker{display:inline-block;background:#fff;color:var(--ink);font-family:var(--pix);font-weight:700;border:var(--bw) solid var(--ink);box-shadow:3px 3px 0 var(--ink);border-radius:8px;padding:4px 14px;font-size:.95rem;letter-spacing:.06em}
 .herologo{display:block;width:min(600px,88vw);height:auto;margin:22px auto 26px}
 .h1fallback{font-family:var(--pix);font-size:clamp(2.6rem,9vw,5rem);margin:18px 0 10px;color:var(--ink);text-shadow:4px 4px 0 #fff}
-.hero p.lead{display:inline-block;font-size:.82rem;line-height:1.35;font-weight:700;max-width:420px;margin:0 auto 22px;color:var(--ink);background:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:6px 12px;box-shadow:3px 3px 0 var(--ink)}
-@media(max-width:640px){.hero p.lead{font-size:.74rem;max-width:300px;padding:5px 10px;margin-bottom:18px}}
 .btn{display:inline-block;border:var(--bw) solid var(--ink);border-radius:10px;padding:11px 22px;font-family:var(--pix);font-weight:700;text-decoration:none;font-size:1.1rem;color:var(--ink);transition:transform .08s,box-shadow .08s}
 .btn.primary{background:var(--lime);box-shadow:5px 5px 0 var(--ink)}
 .btn.ghost{background:#fff;box-shadow:5px 5px 0 var(--ink)}
@@ -103,13 +94,7 @@ header.top.has-eventlogo .brand-t{display:none}
 .btn.small{padding:8px 16px;font-size:1rem;box-shadow:3px 3px 0 var(--ink)}
 .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
 .hero .btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.hero-ctl{position:absolute;z-index:3;left:0;right:0;bottom:16px;display:flex;justify-content:center;align-items:center;gap:14px}
-.hero-ctl .arrow{width:38px;height:38px;border-radius:8px;border:var(--bw) solid var(--ink);background:#fff;color:var(--ink);font-size:1.3rem;line-height:1;display:grid;place-items:center;padding:0;box-shadow:3px 3px 0 var(--ink)}
-.hero-ctl .dots{display:flex;gap:8px}
-.hero-ctl .dots button{width:14px;height:14px;border-radius:3px;border:2px solid var(--ink);background:#fff;padding:0}
-.hero-ctl .dots button.on{background:var(--lime)}
-.hero-badge{position:absolute;z-index:3;left:14px;bottom:12px;background:var(--lime);color:var(--ink);border:2px solid var(--ink);border-radius:6px;padding:2px 10px;font-weight:800;font-size:.75rem}
-@media(max-width:640px){.hero{padding:40px 0 78px}.hero-badge{display:none}.btn{font-size:1rem}}
+@media(max-width:640px){.hero{padding:40px 0 60px}.btn{font-size:1rem}}
 
 /* sections and bands */
 section{padding:56px 0 52px}
@@ -122,6 +107,25 @@ section.band .sub{color:var(--ink)}
 #when{padding-bottom:8px}
 #info{padding-bottom:40px}
 
+/* clean digits inside pixel-font text */
+.dg{font-family:var(--num);font-weight:800;font-variant-numeric:lining-nums tabular-nums;letter-spacing:0}
+/* photo lightbox (merch photos) */
+.lb{position:fixed;inset:0;z-index:300;background:rgba(13,13,18,.96);display:none;flex-direction:column;align-items:center;justify-content:center;padding:56px 12px 64px}
+.lb.open{display:flex}
+.lb-img{max-width:min(1100px,100%);max-height:100%;object-fit:contain;background:#fff;border:var(--bw) solid var(--ink);border-radius:8px;touch-action:pinch-zoom;user-select:none;-webkit-user-drag:none}
+.lb-x,.lb-nav{position:absolute;border-radius:10px;border:var(--bw) solid var(--ink);background:#fff;color:var(--ink);font-weight:900;display:grid;place-items:center;padding:0;line-height:1;box-shadow:3px 3px 0 var(--ink)}
+.lb-x{top:12px;right:12px;width:44px;height:44px;font-size:1.5rem}
+.lb-nav{top:50%;transform:translateY(-50%);width:44px;height:52px;font-size:1.8rem}
+.lb-nav.prev{left:10px}.lb-nav.next{right:10px}
+.lb-info{position:absolute;left:0;right:0;bottom:16px;text-align:center;color:#fff;font-family:var(--num);font-weight:800;pointer-events:none;padding:0 12px}
+.lb-info .lb-cap{margin-right:10px}
+@media(max-width:640px){.lb{padding:56px 6px 112px}.lb-info{bottom:66px}.lb-nav{top:auto;bottom:10px;transform:none;width:44px;height:40px}.lb-nav.prev{left:calc(50% - 110px)}.lb-nav.next{right:calc(50% - 110px)}}
+/* big "screenshot your code" box on the confirmation */
+.shot{background:var(--coral);color:var(--ink);border:var(--bw) solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);padding:14px 16px;margin:12px 0 16px;text-align:center}
+.shot b{display:block;font-family:var(--pix);font-size:clamp(1.25rem,5vw,1.7rem);line-height:1.2}
+.shot span{display:block;margin-top:4px;font-weight:700}
+.shot .ordercode{display:inline-block;margin-top:10px;font-size:clamp(1.8rem,8vw,2.6rem);padding:6px 18px}
+.delivery-note{margin:2px 0 12px;color:var(--muted);font-weight:600}
 /* event info */
 .ww-row{display:grid;grid-template-columns:repeat(3,1fr);margin:14px 0 46px}
 .ww{display:flex;gap:14px;align-items:flex-start;padding:4px 26px}
@@ -222,6 +226,9 @@ input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px
 .pimg{height:170px;display:grid;place-items:center;font-size:4.5rem;background:var(--lime);border-bottom:var(--bw) solid var(--ink)}
 .pcard:nth-child(2n) .pimg{background:var(--coral)}.pcard:nth-child(3n) .pimg{background:var(--purple)}
 .pimg img{width:100%;height:100%;object-fit:cover}
+.pimg.slider .slide img{cursor:zoom-in}
+.zoom{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:8px;border:var(--bw) solid var(--ink);background:#fff;color:var(--ink);display:grid;place-items:center;padding:0;box-shadow:2px 2px 0 var(--ink)}
+.zoom svg{width:18px;height:18px}
 .pimg.slider{height:auto;aspect-ratio:3/2;position:relative;overflow:hidden;display:block;touch-action:pan-y}
 .strack{display:flex;height:100%;transition:transform .35s ease}
 .strack .slide{flex:0 0 100%;height:100%;position:relative;background:#fff}
@@ -400,19 +407,11 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
 
 <main id="top">
 <div class="hero t-purple" id="hero">
-  <div class="slides" id="slides" aria-hidden="true"></div><div class="hero-shade"></div>
-  <span class="hero-badge" id="heroBadge" hidden>Photo slot: add last year's photos in CONFIG.heroImages</span>
-  <div class="hero-ctl" id="heroCtl" hidden>
-    <button type="button" class="arrow" id="heroPrev" aria-label="Previous photo">‹</button>
-    <div class="dots" id="heroDots"></div>
-    <button type="button" class="arrow" id="heroNext" aria-label="Next photo">›</button>
-  </div>
   <div class="wrap">
     <span class="kicker" id="hSchool">SCHOOL NAME</span>
     <h1 class="sr-only" id="heroTitle">Color Fun Run 2026</h1>
     <img class="herologo" id="heroLogo" alt="BM Color Fun Run 2026" hidden>
     <div class="h1fallback" id="heroFallback" aria-hidden="true" hidden>Color Fun Run 2026</div>
-    <p class="lead">Run, laugh and get splashed with color! Register your family and grab your official event merchandise.</p>
     <div class="btns" id="heroBtns">
       <a class="btn primary" id="heroCta" href="#register">Register your family</a>
       <a class="btn ghost" id="heroShop" href="#shop-only">Shop only (no registration)</a>
@@ -500,6 +499,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <!-- MERCH-ONLY (after registration closes) -->
     <form class="panel" id="merchForm" novalidate autocomplete="on" hidden>
       <h3>Your details</h3>
+      <p class="delivery-note">Merchandise is handed out through the students at school. Please give the name and class of <b>one student</b> who will receive this whole order and bring it home (any child of yours, even if not running). It works like a delivery address.</p>
       <div class="grid2">
         <div class="field" data-f="m_name">
           <label for="m_name">Full name</label>
@@ -515,6 +515,16 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
           <label for="m_email">Email</label>
           <input id="m_email" name="email" type="email" autocomplete="email">
           <div class="errmsg">Please enter a valid email address.</div>
+        </div>
+        <div class="field" data-f="m_student">
+          <label for="m_student">Student who will receive this order <span class="opt">(name)</span></label>
+          <input id="m_student" name="student" autocomplete="off" placeholder="Student's full name">
+          <div class="errmsg">Please enter the student's name.</div>
+        </div>
+        <div class="field" data-f="m_class">
+          <label for="m_class">Student's class</label>
+          <input id="m_class" name="class" autocomplete="off" placeholder="E.g. 4B" maxlength="20">
+          <div class="errmsg">Please enter the student's class.</div>
         </div>
         <div class="field" data-f="m_code">
           <label for="m_code">Your registration code <span class="opt">(optional, e.g. CFR-0012)</span></label>
@@ -553,7 +563,11 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
       <span class="status" id="dStatus">Waiting for payment</span>
       <h2 style="margin:10px 0 4px">Thank you, <span id="dName"></span>!</h2>
       <p class="sub" id="dSub" style="margin-bottom:10px"></p>
-      <p style="margin:0 0 4px"><span id="dCodeLabel">Registration code</span> <span class="ordercode" id="dCode"></span></p>
+      <div class="shot" role="alert">
+        <b id="dShotTitle">PLEASE SCREENSHOT this registration code to make sure you save it.</b>
+        <span id="dCodeLabel">Registration code</span>
+        <span class="ordercode" id="dCode"></span>
+      </div>
       <ul class="plist" id="dPeople"></ul>
       <div class="bank" id="dBankBox">
         <div class="row"><div><small>Amount to transfer (exact)</small><span class="bigtotal" id="dTotal"></span></div><button class="copy" data-copy="total" type="button">Copy</button></div>
@@ -676,6 +690,13 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <div class="foot-bottom"><strong id="fSchool">School name</strong> · Color Fun Run 2026</div>
   </div>
 </footer>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button type="button" class="lb-x" id="lbX" aria-label="Close">&times;</button>
+  <button type="button" class="lb-nav prev" id="lbPrev" aria-label="Previous photo">&lsaquo;</button>
+  <img class="lb-img" id="lbImg" alt="">
+  <button type="button" class="lb-nav next" id="lbNext" aria-label="Next photo">&rsaquo;</button>
+  <div class="lb-info"><span class="lb-cap" id="lbCap"></span><span id="lbCount"></span></div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -730,7 +751,6 @@ const CONFIG = {
     { src: "logo-fkom.png",      alt: "FKOM (parents association)", rect: true },
     { src: "logo-committee.png", alt: "FKOM sie. Olahraga (sports committee)" }
   ],
-  heroImages: [],
 
   // When / Time / Where
   eventDate: "Saturday, 21 November 2026",
@@ -778,8 +798,10 @@ const CONFIG = {
   productInfo: {
     // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each).
     // Only files that actually exist are shown, so you can add or remove slides at any time. "label" is the small caption.
-    "Color Fun Run T-Shirt": { icon: "👕", desc: "Official event tee. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
-      images: [ { src:"tshirt-design.jpg", label:"Design" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
+    "T-Shirt PIXEL POP": { icon: "👕", desc: "Official event tee, design PIXEL POP. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
+      images: [ { src:"tshirt-pop.jpg", label:"PIXEL POP" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
+    "T-Shirt PIXEL RUN": { icon: "👕", desc: "Official event tee, design PIXEL RUN. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
+      images: [ { src:"tshirt-run.jpg", label:"PIXEL RUN" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 9 letters).",
       images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" } ] }
   },
@@ -799,10 +821,12 @@ const CONFIG = {
   fallbackProducts: (function(){
     const rows = [];
     const add = (sku, product, group, option, price, stock) => rows.push({ sku, product, group, option, price, stock });
-    const shirt = "Color Fun Run T-Shirt";
+    const designs = [["POP","T-Shirt PIXEL POP"],["RUN","T-Shirt PIXEL RUN"]];
     const adult = { S:125000, M:125000, L:125000, XL:125000, XXL:130000, "3XL":135000 };
-    ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-ADT-"+s, shirt, "Adult", s, adult[s], 99));
-    ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-KID-"+s, shirt, "Kids", s, 100000, 99));
+    designs.forEach(d => {
+      ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-ADT-"+s, d[1], "Adult", s, adult[s], 99));
+      ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-KID-"+s, d[1], "Kids", s, 100000, 99));
+    });
     add("CK-S", "Clicker Toy", "1-5 letters", "Name", 65000, 99);
     add("CK-L", "Clicker Toy", "6-9 letters", "Name", 75000, 99);
     add("REG", "Registration fee (per family)", "", "", 0, 9999);
@@ -829,6 +853,7 @@ const CONFIG = {
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 const fmt = n => "Rp " + new Intl.NumberFormat("id-ID").format(Math.round(n));
+const nd = s => String(s == null ? "" : s).split(/(\d+(?:[:.,/]\d+)*)/).map((t, i) => i % 2 ? '<span class="dg">' + esc(t) + '</span>' : esc(t)).join("");   // digits in the clean font, letters stay pixel
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 const dayMs = s => new Date(s + "T00:00:00+07:00").getTime();                 // Jakarta, UTC+7
 const fmtDay = s => { const t = dayMs(s); return isNaN(t) ? s : new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"long", year:"numeric", timeZone:"Asia/Jakarta" }).format(new Date(t)); };
@@ -916,7 +941,7 @@ function renderFacts(){
 
   // When / Time / Where
   const ww = [["📅", "When", C.eventDate, C.dateNote, ""], ["🕕", "Time", C.timeMain, C.timeNote, ""], ["📍", "Where", C.placeMain, C.placeNote, C.mapsUrl]];
-  $("#whenWhere").innerHTML = ww.map(w => `<div class="ww"><span class="ico" aria-hidden="true">${w[0]}</span><div><small>${esc(w[1])}</small><strong>${esc(w[2])}</strong>${w[3] ? `<span class="nt">${esc(w[3])}</span>` : ""}${w[4] ? `<a href="${esc(w[4])}" target="_blank" rel="noopener">Open in Maps →</a>` : ""}</div></div>`).join("");
+  $("#whenWhere").innerHTML = ww.map(w => `<div class="ww"><span class="ico" aria-hidden="true">${w[0]}</span><div><small>${esc(w[1])}</small><strong>${nd(w[2])}</strong>${w[3] ? `<span class="nt">${esc(w[3])}</span>` : ""}${w[4] ? `<a href="${esc(w[4])}" target="_blank" rel="noopener">Open in Maps →</a>` : ""}</div></div>`).join("");
 
   // Race-day schedule
   $("#timeline").innerHTML = C.timeline.map(t => `<li><time>${esc(t.time)}</time><div><strong>${esc(t.title)}</strong>${t.note ? `<span class="nt">${esc(t.note)}</span>` : ""}${t.tbc ? `<em class="tag tbc">to be confirmed</em>` : ""}</div></li>`).join("");
@@ -953,47 +978,6 @@ function initHero(){
   img.src = H.logo.replace("{theme}", theme);
 }
 
-/* ---------- hero photo carousel ---------- */
-function initCarousel(){
-  const imgs = (CONFIG.heroImages || []).filter(Boolean);
-  const host = $("#slides");
-  if (!imgs.length){
-    host.innerHTML = '<div class="slide ph on"></div>';
-    $("#heroBadge").hidden = !!CONFIG.API_URL;      // reminder only while previewing
-    return;
-  }
-  host.innerHTML = imgs.map((src, i) => `<div class="slide ${i === 0 ? "on" : ""}" style="background-image:url('${esc(encodeURI(src).replace(/'/g, "%27"))}')"></div>`).join("");
-  $(".hero").classList.add("has-photos");
-  if (imgs.length < 2) return;
-  const slides = $$(".slide", host), dots = $("#heroDots"), hero = $(".hero");
-  let cur = 0, timer = null;
-  dots.innerHTML = imgs.map((_, i) => `<button type="button" aria-label="Photo ${i + 1}" data-i="${i}"></button>`).join("");
-  $("#heroCtl").hidden = false;
-  const go = n => {
-    cur = (n + slides.length) % slides.length;
-    slides.forEach((s, i) => s.classList.toggle("on", i === cur));
-    $$("button", dots).forEach((b, i) => b.classList.toggle("on", i === cur));
-  };
-  const stop = () => { clearInterval(timer); timer = null; };
-  const start = () => {
-    stop();
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    timer = setInterval(() => go(cur + 1), 5000);
-  };
-  $("#heroPrev").addEventListener("click", () => { go(cur - 1); start(); });
-  $("#heroNext").addEventListener("click", () => { go(cur + 1); start(); });
-  dots.addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b){ go(Number(b.dataset.i)); start(); } });
-  hero.addEventListener("mouseenter", stop); hero.addEventListener("mouseleave", start);
-  hero.addEventListener("focusin", stop); hero.addEventListener("focusout", start);
-  let x0 = null;
-  hero.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });
-  hero.addEventListener("touchend", e => {
-    if (x0 === null) return;
-    const dx = e.changedTouches[0].clientX - x0; x0 = null;
-    if (Math.abs(dx) > 50){ go(cur + (dx < 0 ? 1 : -1)); start(); }
-  });
-  go(0); start();
-}
 
 function applyMode(){
   const p = phase;
@@ -1067,7 +1051,7 @@ const imgSrc = s => esc(encodeURI(String(s)).replace(/'/g, "%27"));
 
 function renderStatic(){
   const preview = !CONFIG.API_URL;                // placeholders only show while previewing
-  $("#hSchool").textContent = CONFIG.schoolName.toUpperCase();
+  $("#hSchool").innerHTML = nd(CONFIG.schoolName.toUpperCase());
   $("#fSchool").textContent = CONFIG.schoolName;
 
   // header logos
@@ -1140,7 +1124,7 @@ function renderPeople(){
   const runnersN = people.length - helpers;
   const full = people.length >= MAX_PEOPLE || (adults >= MAX_ADULTS && kids >= MAX_CHILDREN && helpers >= MAX_HELPERS);
   $("#addPerson").disabled = full;
-  $("#addPerson").textContent = full ? "Maximum reached (" + MAX_PEOPLE + " people per registration)" : "+ Add participant (" + people.length + "/" + MAX_PEOPLE + " people" + (helpers ? ", incl. " + helpers + " helper" + (helpers > 1 ? "s" : "") : "") + ")";
+  $("#addPerson").innerHTML = nd(full ? "Maximum reached (" + MAX_PEOPLE + " people per registration)" : "+ Add participant (" + people.length + "/" + MAX_PEOPLE + " people" + (helpers ? ", incl. " + helpers + " helper" + (helpers > 1 ? "s" : "") : "") + ")");
   $("#helperConsent").hidden = helpers === 0;
   $("#peopleHint").textContent = "Up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children per registration, and no more than " + MAX_PEOPLE + " people in total (helpers included). At least one must be a student (not needed when the contact person is teacher / staff). A child who is not a student: choose Other family member. A helper who runs with a child (up to " + MAX_HELPERS + ") is added with the role Helper (no bib): no bib number and no medal. One goodie bag per family. Children under 2 cannot be registered but may join with a companion.";
   $("#roleBar").innerHTML = `<span class="rb ${adults >= MAX_ADULTS ? "full" : ""}">Parents / adults <b>${adults}/${MAX_ADULTS}</b></span><span class="rb ${kids >= MAX_CHILDREN ? "full" : ""}">Children <b>${kids}/${MAX_CHILDREN}</b> <small>(students / other family)</small></span><span class="rb ${helpers >= MAX_HELPERS ? "full" : ""}">Helpers (no bib) <b>${helpers}/${MAX_HELPERS}</b></span>`;
@@ -1261,6 +1245,7 @@ function imgArea(name, info){
   const i = Math.min(slideAt[name] || 0, imgs.length - 1);
   return `<div class="pimg slider" data-p="${esc(name)}"><div class="strack" style="transform:translateX(-${i*100}%)">` +
     imgs.map(m => `<div class="slide"><img src="${esc(m.src)}" alt="${esc(name)}${m.label ? " - " + esc(m.label) : ""}">${m.label ? `<span class="cap">${esc(m.label)}</span>` : ""}</div>`).join("") + `</div>` +
+    `<button type="button" class="zoom" data-act="zoom" aria-label="View larger photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><path d="M15 15l6 6M10 7v6M7 10h6"/></svg></button>` +
     (imgs.length > 1 ? `<button type="button" class="sarrow prev" data-act="prev" aria-label="Previous photo">‹</button><button type="button" class="sarrow next" data-act="next" aria-label="Next photo">›</button><div class="sdots">` +
       imgs.map((m, k) => `<button type="button" class="${k===i?"on":""}" data-act="dot" data-i="${k}" aria-label="Photo ${k+1}"></button>`).join("") + `</div>` : "") + `</div>`;
 }
@@ -1269,21 +1254,67 @@ function slideMove(name, to){
   slideAt[name] = ((to % n) + n) % n; renderProducts();
 }
 function bindSlider(card, name){
-  let x0 = null;
+  let x0 = null, swiped = false;
   const area = card.querySelector(".pimg.slider"); if (!area) return;
-  area.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive:true });
+  area.addEventListener("touchstart", e => { x0 = e.touches[0].clientX; swiped = false; }, { passive:true });
   area.addEventListener("touchend", e => {
     if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
-    if (Math.abs(dx) > 40) slideMove(name, (slideAt[name] || 0) + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 40){ swiped = true; slideMove(name, (slideAt[name] || 0) + (dx < 0 ? 1 : -1)); }
   });
   card.addEventListener("click", e => {
+    if (e.target.closest(".slide img")){ if (!swiped) openLb(name, slideAt[name] || 0); swiped = false; return; }
     const b = e.target.closest("button[data-act]"); if (!b) return;
+    if (b.dataset.act === "zoom"){ openLb(name, slideAt[name] || 0); return; }
     const cur = slideAt[name] || 0;
     if (b.dataset.act === "prev") slideMove(name, cur - 1);
     else if (b.dataset.act === "next") slideMove(name, cur + 1);
     else if (b.dataset.act === "dot") slideMove(name, Number(b.dataset.i));
   });
 }
+
+/* ---------- merch photo lightbox ---------- */
+const lb = { name:"", i:0, opener:null };
+function lbShow(){
+  const imgs = okImgs[lb.name] || []; if (!imgs.length) return;
+  lb.i = ((lb.i % imgs.length) + imgs.length) % imgs.length;
+  const m = imgs[lb.i];
+  $("#lbImg").src = m.src; $("#lbImg").alt = lb.name + (m.label ? " - " + m.label : "");
+  $("#lbCap").textContent = (m.label && lb.name.indexOf(m.label) < 0 ? lb.name + " · " + m.label : lb.name + (m.label ? "" : ""));
+  $("#lbCount").textContent = imgs.length > 1 ? (lb.i + 1) + " / " + imgs.length : "";
+  $("#lbPrev").hidden = $("#lbNext").hidden = imgs.length < 2;
+}
+function openLb(name, i){
+  if (!(okImgs[name] || []).length) return;
+  lb.name = name; lb.i = i || 0; lb.opener = document.activeElement;
+  lbShow(); $("#lb").classList.add("open"); document.body.style.overflow = "hidden";
+  $("#lbX").focus({ preventScroll:true });
+}
+function closeLb(){
+  if (!$("#lb").classList.contains("open")) return;
+  $("#lb").classList.remove("open"); document.body.style.overflow = "";
+  $("#lbImg").removeAttribute("src");
+  if (slideAt[lb.name] !== lb.i && (okImgs[lb.name] || []).length > 1){ slideAt[lb.name] = lb.i; renderProducts(); }
+  if (lb.opener && lb.opener.isConnected) lb.opener.focus({ preventScroll:true });
+}
+$("#lbX").addEventListener("click", closeLb);
+$("#lb").addEventListener("click", e => { if (e.target === $("#lb")) closeLb(); });  // tap outside the photo
+$("#lbPrev").addEventListener("click", () => { lb.i--; lbShow(); });
+$("#lbNext").addEventListener("click", () => { lb.i++; lbShow(); });
+document.addEventListener("keydown", e => {
+  if (!$("#lb").classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  else if (e.key === "ArrowLeft"){ lb.i--; lbShow(); }
+  else if (e.key === "ArrowRight"){ lb.i++; lbShow(); }
+});
+(function(){
+  let x0 = null;
+  const zoomed = () => window.visualViewport && window.visualViewport.scale > 1.05;     // while pinch-zoomed, a drag pans instead of changing photo
+  $("#lbImg").addEventListener("touchstart", e => { x0 = e.touches.length === 1 && !zoomed() ? e.touches[0].clientX : null; }, { passive:true });
+  $("#lbImg").addEventListener("touchend", e => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50){ lb.i += dx < 0 ? 1 : -1; lbShow(); }
+  });
+})();
 
 /* ---------- personalised clicker ---------- */
 const ckLetters = t => t.replace(/\s/g, "").length;
@@ -1490,6 +1521,8 @@ function validateMerch(){
   bad += setErr("m_name", val("m_name").length < 3);
   bad += setErr("m_phone", !phoneOk(val("m_phone")));
   bad += setErr("m_email", !emailOk(val("m_email")));
+  bad += setErr("m_student", val("m_student").length < 3);
+  bad += setErr("m_class", val("m_class").length < 1);
   if (!cartLines().length){ showFormError("Please add at least one item from the shop."); bad++; }
   return bad;
 }
@@ -1508,7 +1541,7 @@ function showFormError(msg){ const b = $("#formErr"); b.textContent = msg; b.sty
 function buildPayload(){
   const base = { action:"order", hp: $("#f_hp").value, items: cartLines().filter(l => !l.ck).map(l => ({ sku: l.v.sku, qty: l.qty })), clickers: clickers.map(c => ({ type:c.type, color:c.color, text:c.text })) };
   if (shopOnly()){
-    return Object.assign(base, { orderType:"merch", buyer:{ name:val("m_name"), phone:val("m_phone"), email:val("m_email"), linkedOrder:val("m_code") } });
+    return Object.assign(base, { orderType:"merch", buyer:{ name:val("m_name"), phone:val("m_phone"), email:val("m_email"), linkedOrder:val("m_code"), studentName:val("m_student"), studentClass:val("m_class") } });
   }
   return Object.assign(base, {
     orderType:"registration",
@@ -1534,11 +1567,23 @@ async function submitOrder(){
       const n = sub > 0 ? Math.floor(Math.random()*250)+1 : 0;
       res = { ok:true, orderId:(shopOnly()?"CFM-":"CFR-")+String(Math.floor(Math.random()*99)+1).padStart(4,"0"), uniqueCode:n, subtotal:sub, total:sub+n, orderType: shopOnly()?"merch":"registration", emailed:true };
     } else {
-      const r = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
-      res = await r.json();
+      // Busy-server protection: when the server says it never got to our order (busy:true, nothing was saved), wait a little and try again by itself, up to 4 times.
+      // Also retried when the answer never arrived (overloaded server): sending the same order again within 3 minutes is safe,
+      // the server recognises it and returns the order it already saved instead of creating a second one.
+      for (let attempt = 0; attempt < 5; attempt++){
+        res = null;
+        try {
+          const r = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
+          res = await r.json();
+        } catch(e){ res = null; }
+        if (res && !res.busy) break;
+        if (attempt === 4){ if (!res) throw new Error("unreachable"); break; }
+        btn.textContent = "Many families are registering, retrying…";
+        await new Promise(x => setTimeout(x, 2500 + Math.random() * 4000));
+      }
     }
     if (!res.ok){
-      showFormError(res.error || "Something went wrong. Please try again.");
+      showFormError(res.busy ? "Many families are registering right now and the server is full. Please wait a minute and press Submit again. Your details are still filled in." : (res.error || "Something went wrong. Please try again."));
       if (res.refresh || res.closed || res.full) await loadProducts();
       return;
     }
@@ -1559,6 +1604,7 @@ function showDone(res, payload){
   $("#dName").textContent = who.split(" ")[0];
   $("#dCodeLabel").textContent = isMerch ? "Order code" : "Registration code";
   $("#dCode").textContent = res.orderId;
+  $("#dShotTitle").textContent = "PLEASE SCREENSHOT this " + (isMerch ? "order" : "registration") + " code to make sure you save it.";
   $("#dStatus").textContent = free ? "Registered" : "Waiting for payment";
   $("#dSub").textContent = free
     ? "Your registration is saved. There is nothing to pay. Once your family is verified, your status changes to Confirmed. Check it any time with \"Check your status\" on this website, using your code and WhatsApp number."
@@ -1572,7 +1618,7 @@ function showDone(res, payload){
   $("#dBankBox").hidden = free;
   const lines = cartLines();
   $("#dItems").innerHTML = (lines.length || !free ? `<div class="lbl">Order summary</div>` : "") +
-    (isMerch ? "" : `<div>${payload.participants.filter(x => !isHelper(x.role)).length} runner${payload.participants.filter(x => !isHelper(x.role)).length>1?"s":""}${payload.participants.some(x => isHelper(x.role)) ? " + " + payload.participants.filter(x => isHelper(x.role)).length + " helper(s), no bib" : ""} · one goodie bag for your family</div>`) +
+    (isMerch ? `<div>Deliver to student: <b>${esc(payload.buyer.studentName)}</b> (${esc(payload.buyer.studentClass)})</div>` : `<div>${payload.participants.filter(x => !isHelper(x.role)).length} runner${payload.participants.filter(x => !isHelper(x.role)).length>1?"s":""}${payload.participants.some(x => isHelper(x.role)) ? " + " + payload.participants.filter(x => isHelper(x.role)).length + " helper(s), no bib" : ""} · one goodie bag for your family</div>`) +
     lines.map(l => `<div>${l.qty} × ${esc(l.v.product)} (${esc(lineLabel(l))})</div>`).join("") +
     (free ? "" : `<div style="color:var(--muted)">Subtotal ${fmt(res.subtotal)} + unique code ${res.uniqueCode}</div>`);
   // payment proof: the upload form moves into the confirmation, already filled with this order's code and phone
@@ -1750,7 +1796,7 @@ async function checkStatus(){
   stBusy = true; btn.disabled = true; const label = btn.textContent; btn.textContent = "Checking…";
   try {
     let res;
-    if (!CONFIG.API_URL){ await new Promise(r => setTimeout(r, 500)); res = { ok:true, orderId:code, orderType:code.startsWith("CFM") ? "merch" : "registration", name:"Demo", stage:"unpaid", free:false, total:125123, items:"1× Color Fun Run T-Shirt (Adult · M)", runners:[], bank:CONFIG.bank }; }   // demo mode
+    if (!CONFIG.API_URL){ await new Promise(r => setTimeout(r, 500)); res = { ok:true, orderId:code, orderType:code.startsWith("CFM") ? "merch" : "registration", name:"Demo", stage:"unpaid", free:false, total:125123, items:"1× T-Shirt PIXEL POP (Adult · M)", runners:[], bank:CONFIG.bank }; }   // demo mode
     else {
       const r = await fetch(CONFIG.API_URL, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify({ action:"status", orderId:code, phone:phone }) });
       res = await r.json();
@@ -1812,7 +1858,7 @@ $("#pfBtn").addEventListener("click", uploadProof);
 $("#pf_code").addEventListener("input", () => $('.field[data-f="pf_code"]').classList.remove("err"));
 $("#pf_phone").addEventListener("input", () => $('.field[data-f="pf_phone"]').classList.remove("err"));
 
-fillContactRoles(); renderStatic(); initHero(); initCarousel(); renderFacts(); renderPeople(); renderCart(); probeImages(); loadProducts().then(openFromHash);
+fillContactRoles(); renderStatic(); initHero(); renderFacts(); renderPeople(); renderCart(); probeImages(); loadProducts().then(openFromHash);
 
 /* event details: collapsed by default; opening via menu link or #hash */
 function openAcc(id){ const el = document.getElementById(id); if (el && el.tagName === "DETAILS"){ el.open = true; } }
