@@ -839,15 +839,15 @@ const CONFIG = {
   contactLine: "Questions? Contact the committee.",
 
   // Shown in the shop. Keys must match the "Product" column in the Sheet's Products tab.
+  designs: { product: "T-Shirt", variants: [ { name: "T-Shirt PIXEL POP", label: "PIXEL POP" }, { name: "T-Shirt PIXEL RUN", label: "PIXEL RUN" } ] },
   productInfo: {
     // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each). Both T-shirt cards share the same 3 slides: design (both editions), kids wearing it, size chart.
     // Only files that actually exist are shown, so you can add or remove slides at any time. "label" is the small caption.
-    "T-Shirt PIXEL POP": { icon: "👕", desc: "Official event tee, design PIXEL POP. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
-      images: [ { src:"tshirt-design.jpg", label:"Both designs" }, { src:"tshirt-kids.jpg", label:"Worn by kids" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
-    "T-Shirt PIXEL RUN": { icon: "👕", desc: "Official event tee, design PIXEL RUN. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
+    // One T-shirt card: Type (Adult / Kids), Design (PIXEL POP / PIXEL RUN), Size. In the Sheet the two designs are two products (own stock, own line in the packing list).
+    "T-Shirt": { icon: "👕", desc: "Official event tee. Choose Adult or Kids, pick your design (PIXEL POP or PIXEL RUN), then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
       images: [ { src:"tshirt-design.jpg", label:"Both designs" }, { src:"tshirt-kids.jpg", label:"Worn by kids" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 7 letters).",
-      images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" } ] }
+      images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" }, { src:"clicker-real.jpg", label:"Clicker Toy - Customize Sample" } ] }
   },
   // Personalised clicker. Prices come from the Sheet (Products tab, SKUs below): CK-S = up to 4 letters, CK-L = 5 to 7 letters.
   clicker: {
@@ -1432,7 +1432,16 @@ function renderProducts(){
   const m = productsByName();
   if (!m.size){ host.innerHTML = '<div class="empty">No merchandise available right now.</div>'; return; }
   host.innerHTML = "";
-  m.forEach((rows, name) => {
+  const D = CONFIG.designs, members = D ? D.variants.map(v => v.name) : [];
+  m.forEach((rows, mname) => {
+    let name = mname, designs = null;
+    if (members.includes(mname)){                                   // the design products share one card
+      if (mname !== members.find(n => m.has(n))) return;
+      name = D.product; designs = D.variants.filter(v => m.has(v.name));
+      const sd = sel[name] = sel[name] || {};
+      if (!designs.some(v => v.name === sd.design)) sd.design = designs[0].name;
+      rows = m.get(sd.design);
+    }
     const info = CONFIG.productInfo[name] || {};
     if (CONFIG.clicker && name === CONFIG.clicker.product){ host.appendChild(clickerCard(name, rows, info)); return; }
     const groups = uniq(rows.map(r => r.group)).filter(Boolean);
@@ -1449,12 +1458,16 @@ function renderProducts(){
     let h = imgArea(name, info) + `<div class="pbody"><h3>${esc(name)}</h3>`;
     if (info.desc) h += `<p>${esc(info.desc)}</p>`;
     if (groups.length > 1){
-      h += `<div><div class="lbl">${name.toLowerCase().includes("shirt") ? "Fit" : "Type"}</div><div class="pills">` +
+      h += `<div><div class="lbl">Type</div><div class="pills">` +
         groups.map(g => {
           const p = rows.filter(r => r.group === g)[0];
           const label = (name.toLowerCase().includes("shirt") || !p) ? g : `${g} · ${fmt(p.price)}`;
           return `<button type="button" class="pill ${g===s.group?"on":""}" data-act="group" data-g="${esc(g)}">${esc(label)}</button>`;
         }).join("") + `</div></div>`;
+    }
+    if (designs && designs.length > 1){
+      h += `<div><div class="lbl">Design</div><div class="pills">` +
+        designs.map(v => `<button type="button" class="pill ${v.name===s.design?"on":""}" data-act="design" data-d="${esc(v.name)}">${esc(v.label)}</button>`).join("") + `</div></div>`;
     }
     h += `<div><div class="lbl">${isColor ? "Color" : "Size"}</div><div class="pills">` +
       inGroup.map(r => {
@@ -1468,7 +1481,8 @@ function renderProducts(){
     card.innerHTML = h;
     card.addEventListener("click", e => {
       const b = e.target.closest("button[data-act]"); if (!b) return;
-      if (b.dataset.act === "group"){ s.group = b.dataset.g; s.option = null; renderProducts(); }
+      if (b.dataset.act === "design"){ s.design = b.dataset.d; renderProducts(); }
+      else if (b.dataset.act === "group"){ s.group = b.dataset.g; s.option = null; renderProducts(); }
       else if (b.dataset.act === "opt"){ s.option = b.dataset.o; renderProducts(); }
       else if (b.dataset.act === "add" && cur){
         const have = cart[cur.sku] || 0;
