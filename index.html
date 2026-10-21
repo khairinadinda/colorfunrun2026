@@ -160,8 +160,8 @@ ol.timeline li.next strong{background:var(--lime);display:inline-block;padding:0
 .tag{display:inline-block;font-style:normal;font-size:.72rem;font-weight:800;border-radius:5px;padding:1px 9px;margin-top:3px;border:2px solid var(--ink)}
 .tag.tbc{background:#fff}
 .tag.nxt{background:var(--coral)}
-.route-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start}
-@media(max-width:860px){.route-grid{grid-template-columns:1fr}}
+.route-grid{display:grid;grid-template-columns:minmax(0,440px) 1fr;gap:30px;align-items:start}   /* the map is portrait */
+@media(max-width:860px){.route-grid{grid-template-columns:1fr}.routefig{max-width:480px;width:100%;margin:0 auto}}
 .routefig{margin:0;position:relative;border:var(--bw) solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:6px 6px 0 var(--ink);background:#fff}
 .routefig img,.routefig svg{display:block;width:100%;height:auto}
 .routefig .tmpl{position:absolute;right:12px;bottom:12px;background:var(--lime);color:var(--ink);font-weight:800;font-size:.75rem;border-radius:6px;padding:3px 11px;border:2px solid var(--ink)}
@@ -816,13 +816,13 @@ const CONFIG = {
     { time:"08:30", title:"Event ends", tbc:true }
   ],
 
-  // Route section. Put your route map in the images folder and set image: "route.png".
+  // Route section. Put your route map in the images folder and set image: "route.jpg".
   // Without an image, a template map is shown with a "Template" tag.
   route: {
-    image: "",
-    alt: "Map of the Color Fun Run route",
+    image: "route.jpg",      // portrait map, 945 x 1417
+    alt: "Map of the 2.5 km Color Fun Run route: start at the school basement, 1 km and 2 km markers along Jl. Gedung Pinang and Jl. Kartika Utama, finish at 2.5 km next to the school",
     intro: "Follow the colors! Here is where we run, where the color zones are and where to find water.",
-    details: [["Distance", "2.5 km"], ["Start", "TBC"], ["Finish", "TBC"], ["Color zones", "TBC"], ["Water stations", "TBC"], ["Color Party", "TBC"]]
+    details: [["Distance", "2.5 km"], ["Start", "Basement area of SD Baktimulya 400"], ["Finish", "2.5 km, next to the school (medal and water)"], ["Color zones", "TBC"], ["Water stations", "At 1 km and at the finish"], ["Color Party", "TBC"]]
   },
 
   // Per registration form: up to 2 adults (Parent / guardian, Teacher / staff) and 3 children (Student, or Other family member
@@ -840,12 +840,12 @@ const CONFIG = {
 
   // Shown in the shop. Keys must match the "Product" column in the Sheet's Products tab.
   productInfo: {
-    // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each).
+    // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each). Both T-shirt cards share the same 3 slides: design (both editions), kids wearing it, size chart.
     // Only files that actually exist are shown, so you can add or remove slides at any time. "label" is the small caption.
     "T-Shirt PIXEL POP": { icon: "👕", desc: "Official event tee, design PIXEL POP. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
-      images: [ { src:"tshirt-pop.jpg", label:"PIXEL POP" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
+      images: [ { src:"tshirt-design.jpg", label:"Both designs" }, { src:"tshirt-kids.jpg", label:"Worn by kids" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "T-Shirt PIXEL RUN": { icon: "👕", desc: "Official event tee, design PIXEL RUN. Choose Adult or Kids, then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
-      images: [ { src:"tshirt-run.jpg", label:"PIXEL RUN" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
+      images: [ { src:"tshirt-design.jpg", label:"Both designs" }, { src:"tshirt-kids.jpg", label:"Worn by kids" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 7 letters).",
       images: [ { src:"clicker-1.jpg", label:"Hexa" }, { src:"clicker-2.jpg", label:"Square" } ] }
   },
