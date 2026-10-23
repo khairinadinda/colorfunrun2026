@@ -26,6 +26,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
+section,.panel.ask,[id]{scroll-margin-top:80px}
 body{margin:0;font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:var(--pix);font-weight:700;line-height:1.1;margin:0;letter-spacing:.01em}
 a{color:#5b16d4}
@@ -54,16 +55,28 @@ nav a.navpill:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink
 .cartbtn{background:var(--ink);color:#fff;border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 12px;font-family:var(--pix);font-weight:700;font-size:1rem;display:flex;gap:8px;align-items:center}
 .cartbtn span{background:var(--lime);color:var(--ink);border-radius:5px;min-width:22px;height:22px;display:grid;place-items:center;font-size:.85rem;padding:0 6px}
 header.top.has-eventlogo .brand-t{display:none}
-@media(max-width:1279px){nav a.hide-lg{display:none}}
-@media(max-width:1139px){nav a.hide-ml{display:none}}
-@media(max-width:1060px){nav{gap:12px}nav a.hide-md{display:none}}
+/* menu: full links only on wide screens, otherwise a Menu button */
+.menubtn{display:none;align-items:center;gap:8px;background:#fff;color:var(--ink);border:var(--bw) solid var(--ink);border-radius:10px;padding:5px 11px;font-family:var(--pix);font-weight:700;font-size:.95rem;box-shadow:3px 3px 0 var(--ink)}
+.menubtn .bars{width:18px;height:12px;background:linear-gradient(var(--ink),var(--ink)) 0 0/100% 3px no-repeat,linear-gradient(var(--ink),var(--ink)) 0 50%/100% 3px no-repeat,linear-gradient(var(--ink),var(--ink)) 0 100%/100% 3px no-repeat}
+.menubtn[aria-expanded="true"]{background:var(--lime)}
+.menubtn[aria-expanded="true"] .bars{background:linear-gradient(45deg,transparent 42%,var(--ink) 42% 58%,transparent 58%),linear-gradient(-45deg,transparent 42%,var(--ink) 42% 58%,transparent 58%)}
+.mnav{position:absolute;left:0;right:0;top:100%;background:var(--paper);border-bottom:var(--bw) solid var(--ink);box-shadow:0 8px 0 rgba(0,0,0,.12);max-height:calc(100vh - 70px);overflow:auto;padding:8px 16px 14px}
+.mnav[hidden]{display:none}
+.mnav a{display:block;padding:13px 4px;border-bottom:2px dashed #cfc9dc;color:var(--ink);text-decoration:none;font-family:var(--pix);font-weight:700;font-size:1rem}
+.mnav a:last-child{border-bottom:0}
+.mnav a.mp{display:none;margin-top:8px;border:var(--bw) solid var(--ink);border-radius:10px;background:var(--coral);box-shadow:3px 3px 0 var(--ink);padding:11px 14px}
+.mnav a.mp.reg{background:var(--lime)}
+@media(max-width:1279px){nav a.tl{display:none}.menubtn{display:flex}}
+@media(min-width:1280px){.mnav{display:none!important}header.top .wrap{max-width:1240px}}
+@media(max-width:640px){nav a.navpill{display:none}.mnav a.mp{display:block}}
+@media(max-width:480px){.menubtn{padding:3px 8px;font-size:.8rem;box-shadow:2px 2px 0 var(--ink)}}
+@media(max-width:360px){.menubtn .mt{display:none}}
 @media(max-width:640px){
-  nav a.hide-sm{display:none}nav{gap:8px}
+  nav{gap:8px}
   header.top .wrap{height:62px}
   .brand{font-size:1.02rem;gap:8px}
   .logos img,.logo-slot{height:42px}
   header.top.has-logos .brand-t{display:none}
-  nav a.navpill{padding:4px 10px;font-size:.92rem}
   .cartbtn{padding:4px 10px;font-size:.92rem}
 }
 @media(max-width:1000px){.logos>:nth-child(n+2){display:none}}   /* small screens: the menu comes first, so the header keeps only the first logo; all logos are in the footer */
@@ -75,12 +88,11 @@ header.top.has-eventlogo .brand-t{display:none}
   .logos img{max-width:96px}
   .logo-slot{min-width:44px;font-size:.5rem}
   nav{flex:none;gap:5px}
-  nav a.navpill{padding:3px 8px;font-size:.8rem;box-shadow:2px 2px 0 var(--ink)}
   .cartbtn{padding:3px 8px;font-size:.8rem}
   .cartbtn span{min-width:18px;height:18px;font-size:.75rem;padding:0 4px}
 }
 
-@media(max-width:360px){nav{gap:4px}nav a.navpill{font-size:.66rem;padding:3px 6px}.cartbtn{font-size:.7rem;padding:3px 6px}.hero .btn{font-size:.8rem;padding:10px 12px}}
+@media(max-width:360px){nav{gap:4px}nav a.navpill{font-size:.66rem;padding:3px 6px}.menubtn{padding:3px 6px}.cartbtn{font-size:.7rem;padding:3px 6px}.hero .btn{font-size:.8rem;padding:10px 12px}}
 /* hero */
 .hero{position:relative;overflow:hidden;padding:56px 0 84px;text-align:center;color:var(--ink);background:var(--hbg,var(--purple));border-bottom:var(--bw) solid var(--ink)}
 .hero.t-purple{--hbg:var(--purple)}.hero.t-lime{--hbg:var(--lime)}.hero.t-coral{--hbg:var(--coral)}.hero.t-cyan{--hbg:var(--cyan)}.hero.t-white{--hbg:#fff}
@@ -236,8 +248,10 @@ input:focus,select:focus{outline:none;background:var(--lime-soft);box-shadow:3px
 .pcard:nth-child(2n) .pimg{background:var(--coral)}.pcard:nth-child(3n) .pimg{background:var(--purple)}
 .pimg img{width:100%;height:100%;object-fit:cover}
 .pimg.slider .slide img{cursor:zoom-in}
-.zoom{position:absolute;top:8px;right:8px;z-index:2;width:34px;height:34px;border-radius:8px;border:var(--bw) solid var(--ink);background:#fff;color:var(--ink);display:grid;place-items:center;padding:0;box-shadow:2px 2px 0 var(--ink)}
-.zoom svg{width:18px;height:18px}
+.zoom{position:absolute;top:10px;right:10px;z-index:2;height:46px;min-width:46px;padding:0 12px 0 10px;border-radius:12px;border:var(--bw) solid var(--ink);background:var(--lime);color:var(--ink);display:flex;align-items:center;gap:6px;font-family:var(--pix);font-weight:700;font-size:.8rem;box-shadow:3px 3px 0 var(--ink)}
+.zoom svg{width:28px;height:28px;flex:none}
+.zoom:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+@media(max-width:480px){.zoom span{display:none}.zoom{padding:0 9px}}
 .pimg.slider{height:auto;aspect-ratio:3/2;position:relative;overflow:hidden;display:block;touch-action:pan-y}
 .strack{display:flex;height:100%;transition:transform .35s ease}
 .strack .slide{flex:0 0 100%;height:100%;position:relative;background:#fff}
@@ -405,12 +419,22 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <nav>
       <a class="navpill reg" href="#register" id="navReg">Register</a>
       <a class="navpill" href="#shop-only" id="navShop">Shop only</a>
-      <a class="hide-sm hide-md hide-ml" href="#status" id="navStatus">Check status</a>
-      <a class="hide-sm" href="#pay" id="navPay">Upload proof</a>
-      <a class="hide-sm hide-md hide-lg" href="#info">Event details</a>
-      <a class="hide-sm" href="#faq">FAQ</a>
+      <a class="tl" href="#status" id="navStatus">Check status</a>
+      <a class="tl" href="#pay" id="navPay">Upload proof</a>
+            <a class="tl" href="#faq">FAQ</a>
+      <a class="tl" href="#help" id="navHelp">Help Center</a>
       <button class="cartbtn" id="cartNav" type="button" aria-label="Go to cart">Cart <span id="cartCount">0</span></button>
+      <button class="menubtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Open menu"><span class="bars" aria-hidden="true"></span><span class="mt">Menu</span></button>
     </nav>
+  </div>
+  <div class="mnav" id="mnav" hidden>
+    <a class="mp reg" href="#register">Register</a>
+    <a class="mp" href="#shop-only">Shop only</a>
+    <a href="#status">Check status</a>
+    <a href="#pay">Upload payment proof</a>
+    <a href="#info">Event details</a>
+    <a href="#faq">FAQ</a>
+    <a href="#help">Help Center</a>
   </div>
 </header>
 
@@ -688,10 +712,10 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
     <h2>FAQ</h2>
     <p class="sub"></p>
     <div id="faqList"></div>
-    <div class="panel ask" id="ask">
-      <h3>Still have a question?</h3>
-      <p class="sub" style="margin:0 0 10px">Send it to the committee and we reply by email. Please check the FAQ above first.</p>
-      <button type="button" class="btn small" id="askToggle" aria-expanded="false" aria-controls="askForm">Ask a question</button>
+    <div class="panel ask" id="help">
+      <h2 style="font-size:1.6rem;margin:0 0 8px">Help Center</h2>
+      <p class="sub" style="margin:0 0 10px">Have a question, or need the committee to correct your registration or order data? Send it here. Every message gets a ticket number by email, and the committee replies by email (check your spam folder too). Please check the FAQ above first.</p>
+      <button type="button" class="btn small" id="askToggle" aria-expanded="false" aria-controls="askForm">Contact the Help Center</button>
       <div id="askForm" hidden>
         <div class="grid2" style="margin-top:14px">
           <div class="field" data-f="a_name"><label for="a_name">Your name</label><input id="a_name" autocomplete="name"><div class="errmsg">Please enter your name.</div></div>
@@ -699,7 +723,7 @@ footer .stripe{height:16px;background:repeating-linear-gradient(90deg,var(--lime
           <div class="field" data-f="a_phone"><label for="a_phone">WhatsApp number <span class="opt">(optional)</span></label><input id="a_phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xx xxxx xxxx"><div class="errmsg">Please enter a valid phone number or leave it empty.</div></div>
           <div class="field" data-f="a_code"><label for="a_code">Registration / order code <span class="opt">(optional)</span></label><input id="a_code" autocapitalize="characters" autocomplete="off" placeholder="e.g. CFR-0012"></div>
           <div class="field" data-f="a_topic"><label for="a_topic">About</label>
-            <select id="a_topic"><option>Registration</option><option>Payment</option><option>Merchandise</option><option>Event day</option><option>Other</option></select></div>
+            <select id="a_topic"><option>Registration</option><option>Update my data</option><option>Payment</option><option>Merchandise</option><option>Event day</option><option>Other</option></select></div>
         </div>
         <div class="field" data-f="a_msg"><label for="a_msg">Your question</label><textarea id="a_msg" rows="5" maxlength="1500"></textarea><div class="errmsg">Please write your question (at least 10 characters).</div></div>
         <div class="hp" aria-hidden="true"><label>Leave empty<input id="a_hp" tabindex="-1" autocomplete="off"></label></div>
@@ -844,7 +868,7 @@ const CONFIG = {
     // images: the photo slider on the product card. Put the files in the images folder (1200 x 800 JPG/WebP, under 250 KB each). Both T-shirt cards share the same 3 slides: design (both editions), kids wearing it, size chart.
     // Only files that actually exist are shown, so you can add or remove slides at any time. "label" is the small caption.
     // One T-shirt card: Type (Adult / Kids), Design (PIXEL POP / PIXEL RUN), Size. In the Sheet the two designs are two products (own stock, own line in the packing list).
-    "T-Shirt": { icon: "👕", desc: "Official event tee. Choose Adult or Kids, pick your design (PIXEL POP or PIXEL RUN), then your size (S to 3XL).", help: "Check the size chart (swipe the photos) before you order.",
+    "T-Shirt": { icon: "👕", desc: "Official event tee. Choose Adult or Kids, pick your design (PIXEL POP or PIXEL RUN), then your size (Adult S to 5XL, Kids S to 2XL).", help: "Check the size chart (swipe the photos) before you order.",
       images: [ { src:"tshirt-design.jpg", label:"Both designs" }, { src:"tshirt-kids.jpg", label:"Kids size examples" }, { src:"tshirt-size.jpg", label:"Size chart" } ] },
     "Clicker Toy":           { icon: "🎉", desc: "Personalised pocket clicker with your name on it. Pick the shape and colour, then write the name (1 to 7 letters).",
       images: [ { src:"clicker-real.jpg", label:"Clicker Toy - Customize Sample" }, { src:"clicker-colors.jpg", label:"Color options" } ] }
@@ -866,10 +890,10 @@ const CONFIG = {
     const rows = [];
     const add = (sku, product, group, option, price, stock) => rows.push({ sku, product, group, option, price, stock });
     const designs = [["POP","T-Shirt PIXEL POP"],["RUN","T-Shirt PIXEL RUN"]];
-    const adult = { S:125000, M:125000, L:125000, XL:125000, XXL:130000, "3XL":135000 };
+    const adult = { S:125000, M:125000, L:125000, XL:125000, "2XL":130000, "3XL":135000, "4XL":135000, "5XL":135000 };
     designs.forEach(d => {
-      ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-ADT-"+s, d[1], "Adult", s, adult[s], 99));
-      ["S","M","L","XL","XXL","3XL"].forEach(s => add("TS-"+d[0]+"-KID-"+s, d[1], "Kids", s, 100000, 99));
+      ["S","M","L","XL","2XL","3XL","4XL","5XL"].forEach(s => add("TS-"+d[0]+"-ADT-"+s, d[1], "Adult", s, adult[s], 99));
+      ["S","M","L","XL","2XL"].forEach(s => add("TS-"+d[0]+"-KID-"+s, d[1], "Kids", s, 100000, 99));
     });
     add("CK-S", "Clicker Toy", "1-4 letters", "Name", 55000, 99);
     add("CK-L", "Clicker Toy", "5-7 letters", "Name", 67000, 99);
@@ -883,9 +907,10 @@ const CONFIG = {
     ["Who can join?", "Families of our students and teachers. One registration form covers up to 2 parents / adults and 3 children (5 people). List each child as Student, or choose Other family member if the child is not a student. A helper who accompanies a child can be added with the role Helper (no bib), up to 2 per family. Helpers do not receive a bib number or a medal. Families with more people cannot register on one form, please contact the committee."],
     ["How many goodie bags do we get?", "One goodie bag per family. Only registered participants receive a finisher medal."],
     ["Can my child under 2 join?", "Children under 2 cannot be registered, but they are welcome to join with a companion."],
-    ["How do I pay?", "After you submit, you will see the exact amount, our BRI bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
+    ["How do I pay?", "After you submit, you will see the exact amount, our BANK RAYA bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
     ["I closed the page before uploading my payment proof. What now?", "No problem. Scroll to \"Upload payment proof\" on this website and enter your registration code and the WhatsApp number you registered with."],
     ["When is my registration confirmed?", "Once finance has matched your payment and the committee has verified your family against school records. We do not message each family individually. Use \"Check your status\" on this website at any time, with your registration code and the WhatsApp number you registered with. It shows Confirmed once everything is done. General event updates are sent through the event WhatsApp broadcast."],
+    ["What if I made a mistake in my registration or order?", "You have two options. 1) Cancel and enter it again: go to \"Check status\", enter your code and WhatsApp number, then choose \"Cancel registration\" or \"Cancel order\". Cancelling a shop order does not affect your registration. Once cancelled, you can submit a new one right away. This is only possible while the payment has not been verified yet. 2) Ask the committee to correct it: go to \"Help Center\", choose the topic \"Update my data\" and tell us what to change. You keep your original registration or order in place. Every Help Center message gets a ticket number by email, and we will email you when it is solved, so please check your inbox and spam folder. This takes a little longer than cancelling."],
     ["Can I buy merchandise without registering?", "Yes. Use \"Shop only\" at the top of the page: no registration needed, until the merchandise deadline shown above. If you already registered, add your registration code so we can link the two."],
     ["What should we wear?", "Modest clothing. A white top is recommended so the colors show up!"],
     ["Parking?", "Parking is not available. Please use drop-off only."],
@@ -899,8 +924,12 @@ const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
 const fmt = n => "Rp " + new Intl.NumberFormat("id-ID").format(Math.round(n));
 const nd = s => String(s == null ? "" : s).split(/(\d+(?:[:.,/]\d+)*)/).map((t, i) => i % 2 ? '<span class="dg">' + esc(t) + '</span>' : esc(t)).join("");   // digits in the clean font, letters stay pixel
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-const dayMs = s => new Date(s + "T00:00:00+07:00").getTime();                 // Jakarta, UTC+7
-const fmtDay = s => { const t = dayMs(s); return isNaN(t) ? s : new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"long", year:"numeric", timeZone:"Asia/Jakarta" }).format(new Date(t)); };
+// Dates from the Sheet: "yyyy-mm-dd" (whole day) or "yyyy-mm-dd HH:mm" (exact time), Jakarta (UTC+7)
+const hasTime = s => /\d{1,2}:\d{2}/.test(String(s));
+const dayMs = s => { const m = /^(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?$/.exec(String(s).trim()); return m ? new Date(m[1] + "T" + (m[2] ? m[2].padStart(2, "0") + ":" + m[3] : "00:00") + ":00+07:00").getTime() : NaN; };
+const endMs = s => hasTime(s) ? dayMs(s) : dayMs(s) + 864e5;                    // a closing date without a time is inclusive
+const hhmm = s => { const m = /(\d{1,2}):(\d{2})/.exec(String(s)); return m ? m[1].padStart(2, "0") + ":" + m[2] + " WIB" : ""; };
+const fmtDay = s => { const t = dayMs(s); return isNaN(t) ? s : new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"long", year:"numeric", timeZone:"Asia/Jakarta" }).format(new Date(t)) + (hasTime(s) ? ", " + hhmm(s) : ""); };
 
 let variants = [];          // flat rows from the Sheet (or fallback)
 let regRow = null;          // "REG": registration fee per family
@@ -934,7 +963,7 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("sh
 /* ---------- phase (dates + capacity) ---------- */
 function fallbackPhase(){
   const f = CONFIG.fallbackPhase, now = Date.now();
-  const inWin = (a,b) => now >= dayMs(a) && now < dayMs(b) + 864e5;
+  const inWin = (a,b) => now >= dayMs(a) && now < endMs(b);
   return { regOpen:inWin(f.regOpens,f.regCloses), merchOpen:inWin(f.merchOpens,f.merchCloses), regOpens:f.regOpens, regCloses:f.regCloses, merchOpens:f.merchOpens, merchCloses:f.merchCloses, spotsLeft:null, regFull:false };
 }
 function computeMode(p){
@@ -944,7 +973,7 @@ function computeMode(p){
   return (now < dayMs(p.regOpens) && now < dayMs(p.merchOpens)) ? "soon" : "closed";
 }
 
-const shortDay = s => { const t = dayMs(s); return isNaN(t) ? s : new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", timeZone:"Asia/Jakarta" }).format(new Date(t)); };
+const shortDay = s => { const t = dayMs(s); return isNaN(t) ? s : new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", timeZone:"Asia/Jakarta" }).format(new Date(t)) + (hasTime(s) ? " " + hhmm(s).replace(" WIB", "") : ""); };
 
 const ROUTE_TEMPLATE_SVG = `
 <svg viewBox="0 0 800 450" role="img" aria-label="Route map template" xmlns="http://www.w3.org/2000/svg" font-family="Pixelify Sans, Nunito, sans-serif">
@@ -996,7 +1025,7 @@ function renderFacts(){
   const now = Date.now();
   let nextShown = false;
   $("#keyDates").innerHTML = kd.map(x => {
-    const done = dayMs(x[0]) + 864e5 <= now;
+    const done = endMs(x[0]) <= now;
     const isNext = !done && !nextShown; if (isNext) nextShown = true;
     return `<li class="${done ? "done" : ""}${isNext ? " next" : ""}"><time>${esc(shortDay(x[0]))}</time><div><strong>${esc(x[1])}</strong>${isNext ? `<em class="tag nxt">next</em>` : ""}</div></li>`;
   }).join("");
@@ -1289,7 +1318,7 @@ function imgArea(name, info){
   const i = Math.min(slideAt[name] || 0, imgs.length - 1);
   return `<div class="pimg slider" data-p="${esc(name)}"><div class="strack" style="transform:translateX(-${i*100}%)">` +
     imgs.map(m => `<div class="slide"><img src="${esc(m.src)}" alt="${esc(name)}${m.label ? " - " + esc(m.label) : ""}">${m.label ? `<span class="cap">${esc(m.label)}</span>` : ""}</div>`).join("") + `</div>` +
-    `<button type="button" class="zoom" data-act="zoom" aria-label="View larger photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><path d="M15 15l6 6M10 7v6M7 10h6"/></svg></button>` +
+    `<button type="button" class="zoom" data-act="zoom" aria-label="View larger photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10" cy="10" r="6"/><path d="M15 15l6 6M10 7v6M7 10h6"/></svg><span>ZOOM</span></button>` +
     (imgs.length > 1 ? `<button type="button" class="sarrow prev" data-act="prev" aria-label="Previous photo">‹</button><button type="button" class="sarrow next" data-act="next" aria-label="Next photo">›</button><div class="sdots">` +
       imgs.map((m, k) => `<button type="button" class="${k===i?"on":""}" data-act="dot" data-i="${k}" aria-label="Photo ${k+1}"></button>`).join("") + `</div>` : "") + `</div>`;
 }
@@ -1799,7 +1828,8 @@ function renderStatus(r){
   }
   if (r.stage === "unpaid" || r.stage === "proof"){
     const isReg = r.orderType !== "merch", what = isReg ? "registration" : "order";
-    h += `<button class="btn ghost" type="button" id="stCancel" style="width:100%;margin-top:10px">${isReg ? "Cancel registration" : "Cancel order"}</button>
+    h += `<p class="note" style="margin-top:12px">Made a mistake? You can cancel and enter it again, or <a href="#help" class="gohelp">ask the committee to correct your data</a> and keep your place.</p>
+    <button class="btn ghost" type="button" id="stCancel" style="width:100%;margin-top:10px">${isReg ? "Cancel registration" : "Cancel order"}</button>
       <div class="stcancel" id="stCancelBox" hidden>
         <p><b>Cancel this ${what}?</b> ${isReg ? "This cancels the whole registration" + (r.items ? " and the merchandise in it" : "") + ", and gives up your family's spots." : "This cancels the whole order."} This cannot be undone. To join again you would need to register again${isReg ? " while registration is still open" : ""}.</p>
         ${r.stage === "proof" ? `<p><b>You already uploaded a payment proof.</b> If you have transferred money, please also contact the committee about a refund.</p>` : `<p>If you have already transferred money, please do not cancel here. Contact the committee instead.</p>`}
@@ -1878,6 +1908,24 @@ function toggleBox(btnId, boxId, focusId){
 }
 $("#fcToggle").addEventListener("click", () => toggleBox("fcToggle", "fcBox", "fc_phone"));
 $("#askToggle").addEventListener("click", () => toggleBox("askToggle", "askForm", "a_name"));
+/* mobile menu */
+(function(){
+  const btn = $("#menuBtn"), box = $("#mnav");
+  function setMenu(o){ box.hidden = !o; btn.setAttribute("aria-expanded", o ? "true" : "false"); btn.setAttribute("aria-label", o ? "Close menu" : "Open menu"); }
+  btn.addEventListener("click", e => { e.stopPropagation(); setMenu(box.hidden); });
+  box.addEventListener("click", e => { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("click", e => { if (!box.hidden && !e.target.closest("#mnav")) setMenu(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !box.hidden){ setMenu(false); btn.focus(); } });
+  window.addEventListener("resize", () => { if (window.innerWidth >= 1280) setMenu(false); });
+})();
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.gohelp"); if (!a) return;
+  e.preventDefault();
+  const t = $("#a_topic"); if (t) t.value = "Update my data";
+  if ($("#askForm").hidden) toggleBox("askToggle", "askForm", "a_name");
+  $("#help").scrollIntoView({ behavior:"smooth" });
+});
+
 let fcBusy = false;
 async function sendFindCode(){
   if (fcBusy) return;
@@ -1907,7 +1955,7 @@ async function sendQuestion(){
   bad += setErr("a_email", !emailOk(email));
   bad += setErr("a_phone", !!phone && !phoneOk(phone));
   bad += setErr("a_msg", msg.length < 10);
-  if (bad){ const f = $("#ask .field.err"); if (f && f.scrollIntoView) f.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
+  if (bad){ const f = $("#help .field.err"); if (f && f.scrollIntoView) f.scrollIntoView({ behavior:"smooth", block:"center" }); return; }
   askBusy = true; btn.disabled = true; const label = btn.textContent; btn.textContent = "Sending…";
   try {
     const body = { action:"help", name:name, email:email, phone:phone, code:val("a_code").toUpperCase().replace(/\s+/g, ""), topic:$("#a_topic").value, message:msg, hp:$("#a_hp").value };
