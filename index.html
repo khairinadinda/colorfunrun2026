@@ -802,7 +802,7 @@ const CONFIG = {
   // icon is optional: put an official icon image (PNG / SVG) in the images folder, e.g. "icon-instagram.svg".
   // Without it the button shows a round initial instead.
   social: [
-    { name: "Instagram", url: "https://www.instagram.com/fkom.sdbaktimulya400", icon: "icon-instagram.svg" },
+    { name: "Instagram", url: "", icon: "" },
     { name: "Facebook",  url: "", icon: "" },
     { name: "TikTok",    url: "", icon: "" },
     { name: "YouTube",   url: "", icon: "" },
@@ -907,7 +907,7 @@ const CONFIG = {
     ["Who can join?", "Families of our students and teachers. One registration form covers up to 2 parents / adults and 3 children (5 people). List each child as Student, or choose Other family member if the child is not a student. A helper who accompanies a child can be added with the role Helper (no bib), up to 2 per family. Helpers do not receive a bib number or a medal. Families with more people cannot register on one form, please contact the committee."],
     ["How many goodie bags do we get?", "One goodie bag per family. Only registered participants receive a finisher medal."],
     ["Can my child under 2 join?", "Children under 2 cannot be registered, but they are welcome to join with a companion."],
-    ["How do I pay?", "After you submit, you will see the exact amount, our BANK RAYA bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
+    ["How do I pay?", "After you submit, you will see the exact amount, our BRI bank account and your code. Transfer the exact amount, including the last few unique digits, then upload a screenshot or photo of the transfer receipt on the same page."],
     ["I closed the page before uploading my payment proof. What now?", "No problem. Scroll to \"Upload payment proof\" on this website and enter your registration code and the WhatsApp number you registered with."],
     ["When is my registration confirmed?", "Once finance has matched your payment and the committee has verified your family against school records. We do not message each family individually. Use \"Check your status\" on this website at any time, with your registration code and the WhatsApp number you registered with. It shows Confirmed once everything is done. General event updates are sent through the event WhatsApp broadcast."],
     ["What if I made a mistake in my registration or order?", "You have two options. 1) Cancel and enter it again: go to \"Check status\", enter your code and WhatsApp number, then choose \"Cancel registration\" or \"Cancel order\". Cancelling a shop order does not affect your registration. Once cancelled, you can submit a new one right away. This is only possible while the payment has not been verified yet. 2) Ask the committee to correct it: go to \"Help Center\", choose the topic \"Update my data\" and tell us what to change. You keep your original registration or order in place. Every Help Center message gets a ticket number by email, and we will email you when it is solved, so please check your inbox and spam folder. This takes a little longer than cancelling."],
@@ -1052,8 +1052,19 @@ function initHero(){
 }
 
 
+function updateRoleOptions(p){
+  const sel = $("#f_role"); if (!sel) return;
+  [...sel.options].forEach(o => {
+    if (!o.value) return;
+    const full = o.value === "Teacher / staff" ? p.teacherLeft === 0 : p.parentLeft === 0;
+    if (!o.dataset.t) o.dataset.t = o.textContent;
+    o.disabled = !!full; o.textContent = full ? o.dataset.t + " (registrations full)" : o.dataset.t;
+  });
+  if (sel.selectedOptions[0] && sel.selectedOptions[0].disabled) sel.value = "";
+}
 function applyMode(){
   const p = phase;
+  updateRoleOptions(p);
   MAX_PEOPLE = Math.max(1, Math.min(CONFIG.limits.adults + CONFIG.limits.children, Number(p.maxPerForm) || (CONFIG.limits.adults + CONFIG.limits.children)));   // Settings > MAX_PER_FORM
   const show = (el, on) => { el.hidden = !on; };
   const reg = mode === "reg", merch = mode === "merch", open = reg || merch;
@@ -1090,7 +1101,7 @@ function applyMode(){
     $("#submitBtn").textContent = "Place merchandise order";
   } else {
     const left = p.spotsLeft;
-    $("#regSub").textContent = (MAX_PEOPLE < MAX_ADULTS + MAX_CHILDREN ? "One form per family: up to " + MAX_PEOPLE + " people (runners) per registration." : "One form per family: up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children.") + (left != null && left <= 100 ? " Only " + left + " spots left." : "");
+    $("#regSub").textContent = (MAX_PEOPLE < MAX_ADULTS + MAX_CHILDREN ? "One form per family: up to " + MAX_PEOPLE + " people (runners) per registration." : "One form per family: up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children.") + (left != null && left <= 100 ? " Only " + left + " spots left." : "") + (p.teacherLeft != null || p.parentLeft != null ? " Registrations left:" + (p.teacherLeft != null ? " teachers / staff " + p.teacherLeft + (p.parentLeft != null ? "," : ".") : "") + (p.parentLeft != null ? " parents / families " + p.parentLeft + "." : "") : "");
     $("#heroCta").textContent = "Register your family"; $("#heroCta").href = "#register";
     $("#shopSub").textContent = "Optional. Add anything you like and it will be included in the same payment as your registration.";
     $("#okText").textContent = "I confirm the details above are correct and I understand the registration is confirmed only after payment is received and our family is verified.";
