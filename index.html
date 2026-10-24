@@ -946,7 +946,7 @@ let phase = null;           // dates, open/closed flags, spots
 let mode = "reg";           // reg | merch | soon | closed   (what the dates allow)
 let flow = "reg";           // reg | shop: while registration is open, what the visitor chose to do
 
-const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_HELPERS = CONFIG.limits.helpers, MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;   // MAX_PEOPLE = everyone on one form (runners + helpers), 5 in total
+const MAX_ADULTS = CONFIG.limits.adults, MAX_CHILDREN = CONFIG.limits.children, MAX_HELPERS = CONFIG.limits.helpers; let MAX_PEOPLE = MAX_ADULTS + MAX_CHILDREN;   // MAX_PEOPLE = everyone on one form (runners + helpers), 5 in total
 const isChildRole = r => CONFIG.childRoles.indexOf(r) >= 0;
 const isHelper = r => r === CONFIG.helperRole;
 const roleLabel = r => isHelper(r) ? "Helper, no bib" : r;
@@ -1054,6 +1054,7 @@ function initHero(){
 
 function applyMode(){
   const p = phase;
+  MAX_PEOPLE = Math.max(1, Math.min(CONFIG.limits.adults + CONFIG.limits.children, Number(p.maxPerForm) || (CONFIG.limits.adults + CONFIG.limits.children)));   // Settings > MAX_PER_FORM
   const show = (el, on) => { el.hidden = !on; };
   const reg = mode === "reg", merch = mode === "merch", open = reg || merch;
   if (!canShop()) flow = "reg";                       // nothing to shop for: back to the family form
@@ -1089,7 +1090,7 @@ function applyMode(){
     $("#submitBtn").textContent = "Place merchandise order";
   } else {
     const left = p.spotsLeft;
-    $("#regSub").textContent = "One form per family: up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children." + (left != null && left <= 100 ? " Only " + left + " spots left." : "");
+    $("#regSub").textContent = (MAX_PEOPLE < MAX_ADULTS + MAX_CHILDREN ? "One form per family: up to " + MAX_PEOPLE + " people (runners) per registration." : "One form per family: up to " + MAX_ADULTS + " parents / adults and " + MAX_CHILDREN + " children.") + (left != null && left <= 100 ? " Only " + left + " spots left." : "");
     $("#heroCta").textContent = "Register your family"; $("#heroCta").href = "#register";
     $("#shopSub").textContent = "Optional. Add anything you like and it will be included in the same payment as your registration.";
     $("#okText").textContent = "I confirm the details above are correct and I understand the registration is confirmed only after payment is received and our family is verified.";
